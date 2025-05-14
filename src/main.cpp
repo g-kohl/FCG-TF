@@ -5,7 +5,7 @@
 //    INF01047 Fundamentos de Computação Gráfica
 //               Prof. Eduardo Gastal
 //
-//                   LABORATÓRIO 2
+//                  TRABALHO FINAL
 //
 
 // Arquivos "headers" padrões de C podem ser incluídos em um
@@ -38,6 +38,7 @@
 // Headers locais, definidos na pasta "include/"
 #include "utils.h"
 #include "matrices.h"
+#include "camera.hpp"
 
 // Declaração de várias funções utilizadas em main().  Essas estão definidas
 // logo após a definição de main() neste arquivo.
@@ -74,6 +75,7 @@ void ErrorCallback(int error, const char* description);
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 void CursorPosCallback(GLFWwindow* window, double xpos, double ypos);
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 // Definimos uma estrutura que armazenará dados necessários para renderizar
 // cada objeto da cena virtual.
@@ -127,6 +129,9 @@ bool A_pressed = false;
 bool S_pressed = false;
 bool D_pressed = false;
 
+// Create camera
+Camera camera = Camera(0.0f, 0.0f, 2.5f);
+
 int main()
 {
     // Inicializamos a biblioteca GLFW, utilizada para criar uma janela do
@@ -156,7 +161,7 @@ int main()
     // Criamos uma janela do sistema operacional, com 800 colunas e 800 linhas
     // de pixels, e com título "INF01047 ...".
     GLFWwindow* window;
-    window = glfwCreateWindow(800, 800, "INF01047 - 578366 - Matheus Manica da Silva", NULL, NULL);
+    window = glfwCreateWindow(800, 800, "Bloons 3D", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -171,6 +176,8 @@ int main()
     glfwSetMouseButtonCallback(window, MouseButtonCallback);
     // ... ou movimentar o cursor do mouse em cima da janela ...
     glfwSetCursorPosCallback(window, CursorPosCallback);
+    // ... ou rolar a "rodinha" do mouse.
+    glfwSetScrollCallback(window, ScrollCallback);
 
     // Definimos a função de callback que será chamada sempre que a janela for
     // redimensionada, por consequência alterando o tamanho do "framebuffer"
@@ -221,12 +228,9 @@ int main()
     glm::mat4 the_model;
     glm::mat4 the_view;
 
-    float speed = 0.5f;
     float previous_time = (float)glfwGetTime();
     float current_time;
     float delta_time;
-
-    glm::vec4 camera_position_c  = glm::vec4(1.0f,1.0f,-3.0f,1.0f);
 
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
@@ -254,39 +258,27 @@ int main()
         // comentários detalhados dentro da definição de BuildTriangles().
         glBindVertexArray(vertex_array_object_id);
 
-        float view_x = cos(g_CameraPhi)*sin(g_CameraTheta);
-        float view_y = -sin(g_CameraPhi);
-        float view_z = cos(g_CameraPhi)*cos(g_CameraTheta);
-
-        glm::vec4 camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f);
-        
-        glm::vec4 camera_view_vector = glm::vec4(view_x, view_y, view_z, 0.0f);
-
-        glm::vec4 w_vector = -camera_view_vector;
-        glm::vec4 u_vector = crossproduct(camera_up_vector,w_vector);
-
-        w_vector = w_vector / norm(w_vector);
-        u_vector = u_vector / norm(u_vector);
+        camera.update(g_CameraTheta, g_CameraPhi, g_CameraDistance);
 
         current_time = (float)glfwGetTime();
         delta_time = current_time - previous_time;
         previous_time = current_time;
 
         if(W_pressed)
-            camera_position_c += -w_vector * speed * delta_time;
+            camera.move('W', delta_time);
 
         if(A_pressed)
-            camera_position_c += -u_vector * speed * delta_time;
+            camera.move('A', delta_time);
 
         if(S_pressed)
-            camera_position_c += w_vector * speed * delta_time;
+            camera.move('S', delta_time);
 
         if(D_pressed)
-            camera_position_c += u_vector * speed * delta_time;
+            camera.move('D', delta_time);
 
         // Computamos a matriz "View" utilizando os parâmetros da câmera para
         // definir o sistema de coordenadas da câmera.  Veja slides 2-14, 184-190 e 236-242 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
-        glm::mat4 view = Matrix_Camera_View(camera_position_c, camera_view_vector, camera_up_vector);
+        glm::mat4 view = Matrix_Camera_View(camera.position, camera.view_vector, camera.up_vector);
 
         // Agora computamos a matriz de Projeção.
         glm::mat4 projection;
@@ -1024,6 +1016,23 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
     g_LastCursorPosY = ypos;
 }
 
+// Função callback chamada sempre que o usuário movimenta a "rodinha" do mouse.
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    // Atualizamos a distância da câmera para a origem utilizando a
+    // movimentação da "rodinha", simulando um ZOOM.
+    g_CameraDistance -= 0.1f*yoffset;
+
+    // Uma câmera look-at nunca pode estar exatamente "em cima" do ponto para
+    // onde ela está olhando, pois isto gera problemas de divisão por zero na
+    // definição do sistema de coordenadas da câmera. Isto é, a variável abaixo
+    // nunca pode ser zero. Versões anteriores deste código possuíam este bug,
+    // o qual foi detectado pelo aluno Vinicius Fraga (2017/2).
+    const float verysmallnumber = std::numeric_limits<float>::epsilon();
+    if (g_CameraDistance < verysmallnumber)
+        g_CameraDistance = verysmallnumber;
+}
+
 // Definição da função que será chamada sempre que o usuário pressionar alguma
 // tecla do teclado. Veja http://www.glfw.org/docs/latest/input_guide.html#input_key
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
@@ -1132,6 +1141,11 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
             D_pressed = false;
 
         }else if(action == GLFW_REPEAT);
+    }
+
+    if (key == GLFW_KEY_F && action == GLFW_PRESS)
+    {
+        camera.changeMode();
     }
 
 }
