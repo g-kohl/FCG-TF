@@ -1145,7 +1145,16 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 
     if (key == GLFW_KEY_F && action == GLFW_PRESS)
     {
-        camera.changeMode();
+        camera.free = !camera.free;
+    }
+
+    if (key == GLFW_KEY_R && action == GLFW_PRESS)
+    {
+        g_CameraTheta = 0.0f;
+        g_CameraPhi = 3.141592f / 2.0f;
+        g_CameraDistance = 5.0f;
+        camera.free = false;
+        camera.lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);
     }
 
 }
