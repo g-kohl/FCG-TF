@@ -14,6 +14,7 @@ class Camera {
         Camera(float theta, float phi, float distance);
         void move(char direction, float delta_time);
         void update(float theta, float phi, float distance);
+        void reset(float &theta, float &phi, float &distance);
     private:
 
 };
