@@ -1,17 +1,20 @@
 // Based on http://hamelot.io/visualization/opengl-text-without-any-external-libraries/
 //   and on https://github.com/rougier/freetype-gl
-#include <string>
+// #include <string>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+// #include <glad/glad.h>
+// #include <GLFW/glfw3.h>
 
-#include <glm/mat4x4.hpp>
-#include <glm/vec4.hpp>
+// #include <glm/mat4x4.hpp>
+// #include <glm/vec4.hpp>
 
-#include "utils.h"
+// #include "utils.h"
+// #include "dejavufont.h"
+
+#include "textrendering.hpp"
 #include "dejavufont.h"
 
-GLuint CreateGpuProgram(GLuint vertex_shader_id, GLuint fragment_shader_id); // Função definida em main.cpp
+// GLuint CreateGpuProgram(GLuint vertex_shader_id, GLuint fragment_shader_id); // Função definida em main.cpp
 
 const GLchar* const textvertexshader_source = ""
 "#version 330\n"
@@ -35,8 +38,14 @@ const GLchar* const textfragmentshader_source = ""
 "}\n"
 "\0";
 
-void TextRendering_LoadShader(const GLchar* const shader_string, GLuint shader_id)
-{
+GLuint textVAO;
+GLuint textVBO;
+GLuint textprogram_id;
+GLuint texttexture_id;
+
+float textscale = 1.5f;
+
+void TextRendering_LoadShader(const GLchar* const shader_string, GLuint shader_id){
     // Define o código do shader, contido na string "shader_string"
     glShaderSource(shader_id, 1, &shader_string, NULL);
 
@@ -81,11 +90,6 @@ void TextRendering_LoadShader(const GLchar* const shader_string, GLuint shader_i
     // A chamada "delete" em C++ é equivalente ao "free()" do C
     delete [] log;
 }
-
-GLuint textVAO;
-GLuint textVBO;
-GLuint textprogram_id;
-GLuint texttexture_id;
 
 void TextRendering_Init()
 {
@@ -142,9 +146,7 @@ void TextRendering_Init()
     glCheckError();
 }
 
-float textscale = 1.5f;
-
-void TextRendering_PrintString(GLFWwindow* window, const std::string &str, float x, float y, float scale = 1.0f)
+void TextRendering_PrintString(GLFWwindow* window, const std::string &str, float x, float y, float scale)
 {
     scale *= textscale;
     int width, height;
@@ -225,7 +227,7 @@ float TextRendering_CharWidth(GLFWwindow* window)
     return dejavufont.glyphs[32].advance_x / width * textscale;
 }
 
-void TextRendering_PrintMatrix(GLFWwindow* window, glm::mat4 M, float x, float y, float scale = 1.0f)
+void TextRendering_PrintMatrix(GLFWwindow* window, glm::mat4 M, float x, float y, float scale)
 {
     char buffer[40];
     float lineheight = TextRendering_LineHeight(window) * scale;
@@ -240,7 +242,7 @@ void TextRendering_PrintMatrix(GLFWwindow* window, glm::mat4 M, float x, float y
     TextRendering_PrintString(window, buffer, x, y - 3*lineheight, scale);
 }
 
-void TextRendering_PrintVector(GLFWwindow* window, glm::vec4 v, float x, float y, float scale = 1.0f)
+void TextRendering_PrintVector(GLFWwindow* window, glm::vec4 v, float x, float y, float scale)
 {
     char buffer[10];
     float lineheight = TextRendering_LineHeight(window) * scale;
@@ -255,7 +257,7 @@ void TextRendering_PrintVector(GLFWwindow* window, glm::vec4 v, float x, float y
     TextRendering_PrintString(window, buffer, x, y - 3*lineheight, scale);
 }
 
-void TextRendering_PrintMatrixVectorProduct(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale = 1.0f)
+void TextRendering_PrintMatrixVectorProduct(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale)
 {
     char buffer[70];
     float lineheight = TextRendering_LineHeight(window) * scale;
@@ -271,7 +273,7 @@ void TextRendering_PrintMatrixVectorProduct(GLFWwindow* window, glm::mat4 M, glm
     TextRendering_PrintString(window, buffer, x, y - 3*lineheight, scale);
 }
 
-void TextRendering_PrintMatrixVectorProductMoreDigits(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale = 1.0f)
+void TextRendering_PrintMatrixVectorProductMoreDigits(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale)
 {
     char buffer[70];
     float lineheight = TextRendering_LineHeight(window) * scale;
@@ -287,7 +289,7 @@ void TextRendering_PrintMatrixVectorProductMoreDigits(GLFWwindow* window, glm::m
     TextRendering_PrintString(window, buffer, x, y - 3*lineheight, scale);
 }
 
-void TextRendering_PrintMatrixVectorProductDivW(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale = 1.0f)
+void TextRendering_PrintMatrixVectorProductDivW(GLFWwindow* window, glm::mat4 M, glm::vec4 v, float x, float y, float scale)
 {
     auto r = M*v;
     auto w = r[3];

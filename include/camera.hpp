@@ -1,11 +1,16 @@
 #pragma once
 
-#include "matrices.h"
+// C headers
 #include <cmath>
+
+// GLM headers
 #include <glm/vec4.hpp>
 
+// Local headers
+#include "matrices.h"
 
-class Camera {
+
+class Camera{
     public:
         bool free;
         float speed;
@@ -15,6 +20,7 @@ class Camera {
         void move(char direction, float delta_time);
         void update(float theta, float phi, float distance);
         void reset(float &theta, float &phi, float &distance);
+        
     private:
 
 };
