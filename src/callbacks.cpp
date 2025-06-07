@@ -2,17 +2,6 @@
 
 float g_ScreenRatio = 1.0f;
 
-// euler angles
-float g_AngleX = 0.0f;
-float g_AngleY = 0.0f;
-float g_AngleZ = 0.0f;
-
-float g_ForearmAngleZ = 0.0f;
-float g_ForearmAngleX = 0.0f;
-
-float g_TorsoPositionX = 0.0f;
-float g_TorsoPositionY = 0.0f;
-
 bool g_UsePerspectiveProjection = true;
 
 bool g_ShowInfoText = true;
@@ -51,29 +40,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
-
-    float delta = 3.141592 / 16;
-
-    if(key == GLFW_KEY_X && action == GLFW_PRESS){
-        g_AngleX += (mod & GLFW_MOD_SHIFT) ? -delta : delta;
-    }
-
-    if(key == GLFW_KEY_Y && action == GLFW_PRESS){
-        g_AngleY += (mod & GLFW_MOD_SHIFT) ? -delta : delta;
-    }
-    if(key == GLFW_KEY_Z && action == GLFW_PRESS){
-        g_AngleZ += (mod & GLFW_MOD_SHIFT) ? -delta : delta;
-    }
-
-    if(key == GLFW_KEY_SPACE && action == GLFW_PRESS){
-        g_AngleX = 0.0f;
-        g_AngleY = 0.0f;
-        g_AngleZ = 0.0f;
-        g_ForearmAngleX = 0.0f;
-        g_ForearmAngleZ = 0.0f;
-        g_TorsoPositionX = 0.0f;
-        g_TorsoPositionY = 0.0f;
-    }
 
     if(key == GLFW_KEY_P && action == GLFW_PRESS){
         g_UsePerspectiveProjection = true;
@@ -196,23 +162,11 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos){
     }
 
     if(g_RightMouseButtonPressed){
-        float dx = xpos - g_LastCursorPosX;
-        float dy = ypos - g_LastCursorPosY;
-    
-        g_ForearmAngleZ -= 0.01f*dx;
-        g_ForearmAngleX += 0.01f*dy;
-    
         g_LastCursorPosX = xpos;
         g_LastCursorPosY = ypos;
     }
 
-    if(g_MiddleMouseButtonPressed){
-        float dx = xpos - g_LastCursorPosX;
-        float dy = ypos - g_LastCursorPosY;
-
-        g_TorsoPositionX += 0.01f*dx;
-        g_TorsoPositionY -= 0.01f*dy;
-    
+    if(g_MiddleMouseButtonPressed){    
         g_LastCursorPosX = xpos;
         g_LastCursorPosY = ypos;
     }
@@ -226,4 +180,3 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset){
     if(g_CameraDistance < verysmallnumber)
         g_CameraDistance = verysmallnumber;
 }
-

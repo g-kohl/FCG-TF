@@ -7,7 +7,7 @@ Camera::Camera(float theta, float phi, float distance){
     float y = distance*sin(phi);
     float z = distance*cos(phi)*cos(theta);
 
-    speed = 1.0f;
+    speed = 10.0f;
     position = glm::vec4(x,y,z,1.0f);
 
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);

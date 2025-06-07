@@ -19,19 +19,6 @@ extern GLint g_bbox_max_uniform;
 // screen ratio
 extern float g_ScreenRatio;
 
-// euler angles
-extern float g_AngleX;
-extern float g_AngleY;
-extern float g_AngleZ;
-
-// arm rotation
-extern float g_ForearmAngleZ;
-extern float g_ForearmAngleX;
-
-// body position
-extern float g_TorsoPositionX;
-extern float g_TorsoPositionY;
-
 // projection flag
 extern bool g_UsePerspectiveProjection;
 

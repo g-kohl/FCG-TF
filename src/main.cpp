@@ -7,40 +7,19 @@
 //
 //                 TRABALHO FINAL
 
-// C headers
-#include <cstdlib>
-
 // C++ headers
-#include <stack>
-#include <limits>
-#include <fstream>
-#include <sstream>
-#include <algorithm>
-
-// OpenGL headers
-// #include <glad/glad.h>
-// #include <GLFW/glfw3.h>
+#include <iostream>
 
 // GLM headers
 #include <glm/gtc/type_ptr.hpp>
 
-// Load object headers
-#include <stb_image.h>
-
 // Local headers
-// #include "utils.h"
 #include "camera.hpp"
 #include "object_model.hpp"
 #include "callbacks.hpp"
 #include "gpu_functions.hpp"
 #include "show_text.hpp"
 
-// matrix stack functions // jogar para algum header
-void PushMatrix(glm::mat4 M);
-void PopMatrix(glm::mat4& M);
-
-// matrix stack
-std::stack<glm::mat4>  g_MatrixStack;
 
 int main(int argc, char* argv[]){
     // initialize glfw
@@ -99,21 +78,20 @@ int main(int argc, char* argv[]){
     LoadShadersFromFiles();
 
     // load textures
-    LoadTextureImage("../../data/tc-earth_daymap_surface.jpg");
-    LoadTextureImage("../../data/tc-earth_nightmap_citylights.gif");
+    LoadTextureImage("../../data/map.png");
 
     // create object models
     ObjectModel spheremodel("../../data/sphere.obj");
     spheremodel.ComputeNormals();
     spheremodel.BuildTrianglesAndAddToVirtualScene();
 
-    ObjectModel bunnymodel("../../data/bunny.obj");
-    bunnymodel.ComputeNormals();
-    bunnymodel.BuildTrianglesAndAddToVirtualScene();
-
     ObjectModel planemodel("../../data/plane.obj");
     planemodel.ComputeNormals();
     planemodel.BuildTrianglesAndAddToVirtualScene();
+
+    ObjectModel monkeyModel("../../data/monkey.obj");
+    monkeyModel.ComputeNormals();
+    monkeyModel.BuildTrianglesAndAddToVirtualScene();
 
     if(argc > 1){
         ObjectModel model(argv[1]);
@@ -175,7 +153,7 @@ int main(int argc, char* argv[]){
         glm::mat4 projection;
 
         float nearplane = -0.1f;
-        float farplane  = -10.0f;
+        float farplane  = -50.0f;
 
         if(g_UsePerspectiveProjection){
             // perspective projection
@@ -201,30 +179,25 @@ int main(int argc, char* argv[]){
 
         // draw objects
         #define SPHERE 0
-        #define BUNNY  1
-        #define PLANE  2
+        #define PLANE  1
+        #define MONKEY 2
 
-        model = Matrix_Translate(-1.0f,0.0f,0.0f)
-              * Matrix_Rotate_Z(0.6f)
-              * Matrix_Rotate_X(0.2f)
-              * Matrix_Rotate_Y(g_AngleY + (float)glfwGetTime() * 0.1f);
+        model = Matrix_Translate(-8.0f,0.0f,-2.0f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, SPHERE);
         DrawVirtualObject("the_sphere");
 
-        model = Matrix_Translate(1.0f,0.0f,0.0f)
-              * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, BUNNY);
-        DrawVirtualObject("the_bunny");
-
-        model = Matrix_Translate(0.0f,-1.1f,0.0f);
+        model = Matrix_Translate(0.0f,-1.1f,0.0f)
+              * Matrix_Scale(10.0f,10.0f,10.0f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
 
-        // print euler angles
-        TextRendering_ShowEulerAngles(window);
+        model = Matrix_Translate(-5.0f,-1.0f,0.0f)
+              * Matrix_Scale(0.01f,0.01f,0.01f);
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, MONKEY);
+        DrawVirtualObject("monkey");
 
         // print projection matrix
         TextRendering_ShowProjection(window);
@@ -242,22 +215,6 @@ int main(int argc, char* argv[]){
     glfwTerminate();
 
     return 0;
-}
-
-
-void PushMatrix(glm::mat4 M){
-    g_MatrixStack.push(M);
-}
-
-
-void PopMatrix(glm::mat4 &M){
-    if(g_MatrixStack.empty()){
-        M = Matrix_Identity();
-    }
-    else{
-        M = g_MatrixStack.top();
-        g_MatrixStack.pop();
-    }
 }
 
 // set makeprg=cd\ ..\ &&\ make\ run\ >/dev/null

@@ -4,10 +4,6 @@
 #include <cstdlib>
 #include <cstdio>
 
-// OpenGL headers
-// #include <glad/glad.h>
-// #include <GLFW/glfw3.h>
-
 // Local headers
 #include "globals.hpp"
 

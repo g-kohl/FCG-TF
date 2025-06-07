@@ -23,12 +23,12 @@ class ObjectModel{
     std::vector<tinyobj::material_t> materials;
 
     ObjectModel(const char* filename, const char* basepath = NULL, bool triangulate = true);
-    void BuildTrianglesAndAddToVirtualScene(); // build ObjectModel representation
-    void ComputeNormals(); // compute ObjectModel normals
-    void PrintObjModelInfo(); // debugging
+    void BuildTrianglesAndAddToVirtualScene();
+    void ComputeNormals();
+    void PrintObjModelInfo();
 
     private:
 
 };
 
-void DrawVirtualObject(const char* object_name); // draw object
+void DrawVirtualObject(const char* object_name);
