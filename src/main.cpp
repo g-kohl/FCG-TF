@@ -81,9 +81,9 @@ int main(int argc, char* argv[]){
     LoadTextureImage("../../data/map.png");
 
     // create object models
-    ObjectModel spheremodel("../../data/sphere.obj");
-    spheremodel.ComputeNormals();
-    spheremodel.BuildTrianglesAndAddToVirtualScene();
+    ObjectModel balloonModel("../../data/balloon.obj");
+    balloonModel.ComputeNormals();
+    balloonModel.BuildTrianglesAndAddToVirtualScene();
 
     ObjectModel planemodel("../../data/plane.obj");
     planemodel.ComputeNormals();
@@ -92,6 +92,10 @@ int main(int argc, char* argv[]){
     ObjectModel monkeyModel("../../data/monkey.obj");
     monkeyModel.ComputeNormals();
     monkeyModel.BuildTrianglesAndAddToVirtualScene();
+
+    ObjectModel bigMonkeyModel("../../data/big_monkey.obj");
+    bigMonkeyModel.ComputeNormals();
+    bigMonkeyModel.BuildTrianglesAndAddToVirtualScene();
 
     if(argc > 1){
         ObjectModel model(argv[1]);
@@ -178,14 +182,15 @@ int main(int argc, char* argv[]){
         glm::mat4 model = Matrix_Identity();
 
         // draw objects
-        #define SPHERE 0
+        #define BALLOON 0
         #define PLANE  1
         #define MONKEY 2
+        #define BIGMONKEY 3
 
         model = Matrix_Translate(-8.0f,0.0f,-2.0f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, SPHERE);
-        DrawVirtualObject("the_sphere");
+        glUniform1i(g_object_id_uniform, BALLOON);
+        DrawVirtualObject("balloon");
 
         model = Matrix_Translate(0.0f,-1.1f,0.0f)
               * Matrix_Scale(10.0f,10.0f,10.0f);
@@ -198,6 +203,12 @@ int main(int argc, char* argv[]){
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, MONKEY);
         DrawVirtualObject("monkey");
+
+        model = Matrix_Translate(-5.0f,0.0f,0.0f)
+              * Matrix_Scale(0.01f,0.01f,0.01f);
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, BIGMONKEY);
+        DrawVirtualObject("big_monkey");
 
         // print projection matrix
         TextRendering_ShowProjection(window);

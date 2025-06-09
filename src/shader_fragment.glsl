@@ -12,9 +12,10 @@ uniform mat4 view;
 uniform mat4 projection;
 
 // object id
-#define SPHERE 0
+#define BALLOON 0
 #define PLANE  1
 #define MONKEY 2
+#define BIGMONKEY 3
 uniform int object_id;
 
 // AABB
@@ -43,15 +44,9 @@ void main(){
     float U = 0.0;
     float V = 0.0;
 
-    if(object_id == SPHERE){
-
-    }
-    else if(object_id == PLANE){
+    if(object_id == PLANE){
         U = texcoords.x;
         V = texcoords.y;
-    }
-    else if(object_id == MONKEY){
-
     }
 
     vec3 Kd0 = texture(TextureImage0, vec2(U,V)).rgb;
