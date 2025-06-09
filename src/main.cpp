@@ -187,7 +187,8 @@ int main(int argc, char* argv[]){
         #define MONKEY 2
         #define BIGMONKEY 3
 
-        model = Matrix_Translate(-8.0f,0.0f,-2.0f);
+        model = Matrix_Translate(-8.0f,0.0f,-1.5f)
+              * Matrix_Scale(0.5f, 0.5f, 0.5f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, BALLOON);
         DrawVirtualObject("balloon");
@@ -199,13 +200,14 @@ int main(int argc, char* argv[]){
         DrawVirtualObject("the_plane");
 
         model = Matrix_Translate(-5.0f,-1.0f,0.0f)
-              * Matrix_Scale(0.01f,0.01f,0.01f);
+              * Matrix_Scale(0.01f,0.01f,0.01f)
+              * Matrix_Rotate_Y(M_PI);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, MONKEY);
         DrawVirtualObject("monkey");
 
-        model = Matrix_Translate(-5.0f,0.0f,0.0f)
-              * Matrix_Scale(0.01f,0.01f,0.01f);
+        model = Matrix_Translate(-1.0f,-1.5f,-3.0f)
+              * Matrix_Scale(0.05f,0.05f,0.05f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, BIGMONKEY);
         DrawVirtualObject("big_monkey");

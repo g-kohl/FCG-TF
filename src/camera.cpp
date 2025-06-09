@@ -67,7 +67,7 @@ void Camera::update(float theta, float phi, float distance){
 void Camera::reset(float &theta, float &phi, float &distance){
     theta = 0.0f;
     phi = 3.141592f / 2.0f;
-    distance = 5.0f;
+    distance = 15.0f;
     free = false;
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);
 }
