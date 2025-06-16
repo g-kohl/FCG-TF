@@ -30,6 +30,7 @@ extern bool W_pressed;
 extern bool A_pressed;
 extern bool S_pressed;
 extern bool D_pressed;
+extern bool B_pressed;
 
 // create camera
 extern Camera camera;

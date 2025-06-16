@@ -19,7 +19,7 @@
 #include "callbacks.hpp"
 #include "gpu_functions.hpp"
 #include "show_text.hpp"
-
+#include "animation_functions.hpp"
 
 int main(int argc, char* argv[]){
     // initialize glfw
@@ -114,9 +114,42 @@ int main(int argc, char* argv[]){
     glFrontFace(GL_CCW);
 
     // start timer
-    float previous_time = (float)glfwGetTime();
-    float current_time;
-    float delta_time;
+    float current_time = (float)glfwGetTime();
+    float previous_time_camera = current_time;
+    float previous_time_bloon = current_time;
+    float delta_time_camera;
+    float delta_time_bloon;
+    float t_time;
+
+    std::vector<glm::vec4> points = {
+        glm::vec4(-8.0f, 0.0f, -1.6f, 1.0f),
+        glm::vec4(-4.15f, 0.0f, -1.6f, 1.0f),
+        glm::vec4(-0.3f, 0.0f, -1.6f, 1.0f),
+
+        glm::vec4(3.0f, 0.0f, -7.0f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, -5.0f, 1.0f),
+
+        glm::vec4(-3.5f, 0.0f, 0.5f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, 6.0f, 1.0f),
+
+        glm::vec4(-8.0f, 0.0f, 4.5f, 1.0f),
+        glm::vec4(-5.0f, 0.0f, 1.5f, 1.0f),
+
+        glm::vec4(1.25f, 0.0f, 1.5f, 1.0f),
+        glm::vec4(2.5f, 0.0f, 1.5f, 1.0f),
+
+        glm::vec4(2.0f, 0.0f, -5.0f, 1.0f),
+        glm::vec4(5.0f, 0.0f, -3.0f, 1.0f),
+
+        glm::vec4(5.0f, 0.0f, 0.75f, 1.0f),
+        glm::vec4(5.0f, 0.0f, 4.5f, 1.0f),
+
+        glm::vec4(-2.0f, 0.0f, 3.0f, 1.0f),
+        glm::vec4(-1.3f, 0.0f, 9.0f, 1.0f),
+    };
+
+    // Initial balloon position 
+    glm::vec4 bloon_position = glm::vec4(-8.0f, 0.0f, -2.0f, 0.1f);
 
     // render window
     while(!glfwWindowShouldClose(window)){
@@ -134,21 +167,24 @@ int main(int argc, char* argv[]){
 
         // update time
         current_time = (float)glfwGetTime();
-        delta_time = current_time - previous_time;
-        previous_time = current_time;
+        delta_time_camera = current_time - previous_time_camera;
+        previous_time_camera = current_time;
 
         // check camera control keys
         if(W_pressed)
-            camera.move('W', delta_time);
+            camera.move('W', delta_time_camera);
 
         if(A_pressed)
-            camera.move('A', delta_time);
+            camera.move('A', delta_time_camera);
 
         if(S_pressed)
-            camera.move('S', delta_time);
+            camera.move('S', delta_time_camera);
 
         if(D_pressed)
-            camera.move('D', delta_time);
+            camera.move('D', delta_time_camera);
+
+        if(B_pressed)
+            t_time = 0;
 
         // compute view matrix
         glm::mat4 view = Matrix_Camera_View(camera.position, camera.view_vector, camera.up_vector);
@@ -187,7 +223,18 @@ int main(int argc, char* argv[]){
         #define MONKEY 2
         #define BIGMONKEY 3
 
-        model = Matrix_Translate(-8.0f,0.0f,-1.5f)
+        // get delta_time
+        delta_time_bloon = current_time - previous_time_bloon;
+        previous_time_bloon = current_time;
+        t_time += delta_time_bloon;
+
+        glm::vec4 d = bezier_spline(points, t_time);
+
+        // update bloon position
+        glm::vec4 v_vec = d - bloon_position;
+        bloon_position = bloon_position + v_vec; 
+
+        model = Matrix_Translate(bloon_position.x, 0.0f, bloon_position.z)
               * Matrix_Scale(0.5f, 0.5f, 0.5f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, BALLOON);

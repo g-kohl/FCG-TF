@@ -10,6 +10,7 @@ bool W_pressed = false;
 bool A_pressed = false;
 bool S_pressed = false;
 bool D_pressed = false;
+bool B_pressed = false;
 
 float g_CameraTheta = 0.0f;
 float g_CameraPhi = 0.0f;
@@ -96,6 +97,18 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         }
         else if(action == GLFW_RELEASE){
             D_pressed = false;
+
+        }
+        else if(action == GLFW_REPEAT);
+    }
+
+    if(key == GLFW_KEY_B){
+        if(action == GLFW_PRESS){
+            B_pressed = true;
+
+        }
+        else if(action == GLFW_RELEASE){
+            B_pressed = false;
 
         }
         else if(action == GLFW_REPEAT);
