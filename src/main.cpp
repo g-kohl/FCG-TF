@@ -79,6 +79,8 @@ int main(int argc, char* argv[]){
 
     // load textures
     LoadTextureImage("../../data/map.png");
+    LoadTextureImage("../../data/red.png");
+    LoadTextureImage("../../data/brown.png");
 
     // create object models
     ObjectModel balloonModel("../../data/balloon.obj");
@@ -135,7 +137,7 @@ int main(int argc, char* argv[]){
         glm::vec4(-8.0f, 0.0f, 4.5f, 1.0f),
         glm::vec4(-5.0f, 0.0f, 1.5f, 1.0f),
 
-        glm::vec4(1.25f, 0.0f, 1.5f, 1.0f),
+        glm::vec4(-1.25f, 0.0f, 1.5f, 1.0f),
         glm::vec4(2.5f, 0.0f, 1.5f, 1.0f),
 
         glm::vec4(2.0f, 0.0f, -5.0f, 1.0f),
