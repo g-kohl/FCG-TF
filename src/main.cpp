@@ -20,6 +20,8 @@
 #include "gpu_functions.hpp"
 #include "show_text.hpp"
 #include "animation_functions.hpp"
+#include "monkey.hpp"
+#include "bloon.hpp"
 
 int main(int argc, char* argv[]){
     // initialize glfw
@@ -83,21 +85,21 @@ int main(int argc, char* argv[]){
     LoadTextureImage("../../data/brown.png");
 
     // create object models
-    ObjectModel balloonModel("../../data/balloon.obj");
-    balloonModel.ComputeNormals();
-    balloonModel.BuildTrianglesAndAddToVirtualScene();
+    ObjectModel bloonModel("../../data/bloon.obj");
+    bloonModel.ComputeNormals();
+    bloonModel.BuildTrianglesAndAddToVirtualScene();
 
-    ObjectModel planemodel("../../data/plane.obj");
-    planemodel.ComputeNormals();
-    planemodel.BuildTrianglesAndAddToVirtualScene();
+    ObjectModel planeModel("../../data/plane.obj");
+    planeModel.ComputeNormals();
+    planeModel.BuildTrianglesAndAddToVirtualScene();
 
-    ObjectModel monkeyModel("../../data/monkey.obj");
-    monkeyModel.ComputeNormals();
-    monkeyModel.BuildTrianglesAndAddToVirtualScene();
+    ObjectModel monkeyLevel1Model("../../data/monkey_level_1.obj");
+    monkeyLevel1Model.ComputeNormals();
+    monkeyLevel1Model.BuildTrianglesAndAddToVirtualScene();
 
-    ObjectModel bigMonkeyModel("../../data/big_monkey.obj");
-    bigMonkeyModel.ComputeNormals();
-    bigMonkeyModel.BuildTrianglesAndAddToVirtualScene();
+    ObjectModel monkeyLevel2Model("../../data/monkey_level_2.obj");
+    monkeyLevel2Model.ComputeNormals();
+    monkeyLevel2Model.BuildTrianglesAndAddToVirtualScene();
 
     if(argc > 1){
         ObjectModel model(argv[1]);
@@ -150,8 +152,15 @@ int main(int argc, char* argv[]){
         glm::vec4(-1.3f, 0.0f, 9.0f, 1.0f),
     };
 
-    // Initial balloon position 
+    // Initial bloon position 
     glm::vec4 bloon_position = glm::vec4(-8.0f, 0.0f, -2.0f, 0.1f);
+
+    bool tem_macaco = false;
+    Monkey monkey = Monkey(
+        9.0f, -1.1f, 6.0f,
+        0.008f, 0.008f, 0.008f,
+        0.0f, M_PI, 0.0f,
+        "monkey_level_1", 2);
 
     // render window
     while(!glfwWindowShouldClose(window)){
@@ -174,16 +183,22 @@ int main(int argc, char* argv[]){
 
         // check camera control keys
         if(W_pressed)
-            camera.move('W', delta_time_camera);
+            camera.move('F', delta_time_camera); // front
 
         if(A_pressed)
-            camera.move('A', delta_time_camera);
+            camera.move('L', delta_time_camera); // left
 
         if(S_pressed)
-            camera.move('S', delta_time_camera);
+            camera.move('B', delta_time_camera); // back
 
         if(D_pressed)
-            camera.move('D', delta_time_camera);
+            camera.move('R', delta_time_camera); // right
+
+        if(SPACE_pressed)
+            camera.move('U', delta_time_camera); // up
+
+        if(SHIFT_pressed)
+            camera.move('D', delta_time_camera); // down
 
         if(B_pressed)
             t_time = 0;
@@ -220,10 +235,17 @@ int main(int argc, char* argv[]){
         glm::mat4 model = Matrix_Identity();
 
         // draw objects
-        #define BALLOON 0
-        #define PLANE  1
-        #define MONKEY 2
-        #define BIGMONKEY 3
+        #define PLANE 0
+        #define BLOON 1
+        #define MONKEY_LEVEL_1 2
+        #define MONKEY_LEVEL_2 3
+
+        // draw plane
+        model = Matrix_Translate(0.0f,-1.1f,0.0f)
+              * Matrix_Scale(10.0f,1.0f,6.44f);
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, PLANE);
+        DrawVirtualObject("plane");
 
         // get delta_time
         delta_time_bloon = current_time - previous_time_bloon;
@@ -236,30 +258,41 @@ int main(int argc, char* argv[]){
         glm::vec4 v_vec = d - bloon_position;
         bloon_position = bloon_position + v_vec; 
 
-        model = Matrix_Translate(bloon_position.x, 0.0f, bloon_position.z)
-              * Matrix_Scale(0.5f, 0.5f, 0.5f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, BALLOON);
-        DrawVirtualObject("balloon");
+        // draw bloons
+        Bloon bloon = Bloon(
+            bloon_position.x, 0.0f, bloon_position.z,
+            0.3f, 0.3f, 0.3f,
+            0.0f, 0.0f, 0.0f,
+            "bloon", BLOON);
 
-        model = Matrix_Translate(0.0f,-1.1f,0.0f)
-              * Matrix_Scale(10.0f,10.0f,10.0f);
+        model = Matrix_Translate(bloon.translation.x, bloon.translation.y, bloon.translation.z)
+              * Matrix_Scale(bloon.scaling.x, bloon.scaling.y, bloon.scaling.z)
+              * Matrix_Rotate_X(bloon.rotation.x) * Matrix_Rotate_Y(bloon.rotation.y) * Matrix_Rotate_Z(bloon.rotation.z);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, PLANE);
-        DrawVirtualObject("the_plane");
+        glUniform1i(g_object_id_uniform, bloon.object_model_id);
+        DrawVirtualObject(bloon.object_model_name);
 
-        model = Matrix_Translate(-5.0f,-1.0f,0.0f)
-              * Matrix_Scale(0.01f,0.01f,0.01f)
-              * Matrix_Rotate_Y(M_PI);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, MONKEY);
-        DrawVirtualObject("monkey");
+        // draw monkeys
+        if(g_RightMouseButtonPressed){
+            tem_macaco = true;
 
-        model = Matrix_Translate(-1.0f,-1.5f,-3.0f)
-              * Matrix_Scale(0.05f,0.05f,0.05f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, BIGMONKEY);
-        DrawVirtualObject("big_monkey");
+            printf("\n%f %f", g_LastCursorPosX, g_LastCursorPosY);
+
+            // tela: x = [0, 800], y = [0, 600]
+            // mapa: x = [-9, 9], y = [-6, 6]
+
+            monkey.translation.x = ((g_LastCursorPosX / 400) - 1) * 9;
+            monkey.translation.z = ((g_LastCursorPosY / 300) - 1) * 6;
+        }
+
+        if(tem_macaco){
+            model = Matrix_Translate(monkey.translation.x, monkey.translation.y, monkey.translation.z)
+                * Matrix_Scale(monkey.scaling.x, monkey.scaling.y, monkey.scaling.z)
+                * Matrix_Rotate_X(monkey.rotation.x) * Matrix_Rotate_Y(monkey.rotation.y) * Matrix_Rotate_Z(monkey.rotation.z);
+            glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+            glUniform1i(g_object_id_uniform, monkey.object_model_id);
+            DrawVirtualObject(monkey.object_model_name);
+        }
 
         // print projection matrix
         TextRendering_ShowProjection(window);

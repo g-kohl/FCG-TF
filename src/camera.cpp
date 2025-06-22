@@ -24,17 +24,23 @@ void Camera::move(char direction, float delta_time){
         return;
 
     switch(direction) {
-        case 'W':
+        case 'F':
             position += -w_vector * speed * delta_time;
             break;
-        case 'A':
+        case 'L':
             position += -u_vector * speed * delta_time;
             break;
-        case 'S':
+        case 'B':
             position += w_vector * speed * delta_time;
             break;
-        case 'D':
+        case 'R':
             position += u_vector * speed * delta_time;
+            break;
+        case 'U':
+            position += up_vector * speed * delta_time;
+            break;
+        case 'D':
+            position += -up_vector * speed * delta_time;
             break;
         default:
             break;
@@ -67,7 +73,7 @@ void Camera::update(float theta, float phi, float distance){
 void Camera::reset(float &theta, float &phi, float &distance){
     theta = 0.0f;
     phi = 3.141592f / 2.0f;
-    distance = 15.0f;
+    distance = 10.0f;
     free = false;
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);
 }

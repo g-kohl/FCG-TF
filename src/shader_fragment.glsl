@@ -12,10 +12,10 @@ uniform mat4 view;
 uniform mat4 projection;
 
 // object id
-#define BALLOON 0
-#define PLANE  1
-#define MONKEY 2
-#define BIGMONKEY 3
+#define PLANE 0
+#define BLOON 1
+#define MONKEY_LEVEL_1 2
+#define MONKEY_LEVEL_2 3
 uniform int object_id;
 
 // AABB
@@ -40,7 +40,7 @@ void main(){
 
     vec4 p = position_world;
     vec4 n = normalize(normal);
-    vec4 l = normalize(vec4(1.0,1.0,0.0,0.0));
+    vec4 l = normalize(vec4(-1.0,1.0,0.0,0.0));
     vec4 v = normalize(camera_position - p);
     vec4 h = normalize(v + l);
 
@@ -52,7 +52,7 @@ void main(){
     vec3 Ka;
     float q;
 
-    if(object_id == BALLOON){
+    if(object_id == BLOON){
         U = texcoords.x;
         V = texcoords.y;
 
@@ -70,7 +70,7 @@ void main(){
         Ka = vec3(0.0,0.0,0.0);
         q = 1.0;
     }
-    else if(object_id == MONKEY){
+    else if(object_id == MONKEY_LEVEL_1){
         U = texcoords.x;
         V = texcoords.y;
 
@@ -79,7 +79,7 @@ void main(){
         Ka = vec3(0.0,0.0,0.0);
         q = 1.0;
     }
-    else if(object_id == BIGMONKEY){
+    else if(object_id == MONKEY_LEVEL_2){
         U = texcoords.x;
         V = texcoords.y;
 
