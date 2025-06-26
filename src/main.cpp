@@ -22,6 +22,7 @@
 #include "animation_functions.hpp"
 #include "monkey.hpp"
 #include "bloon.hpp"
+#include "player.hpp"
 
 int main(int argc, char* argv[]){
     // initialize glfw
@@ -155,13 +156,6 @@ int main(int argc, char* argv[]){
     // Initial bloon position 
     glm::vec4 bloon_position = glm::vec4(-8.0f, 0.0f, -2.0f, 0.1f);
 
-    bool tem_macaco = false;
-    Monkey monkey = Monkey(
-        9.0f, -1.1f, 6.0f,
-        0.008f, 0.008f, 0.008f,
-        0.0f, M_PI, 0.0f,
-        "monkey_level_1", 2);
-
     // render window
     while(!glfwWindowShouldClose(window)){
         // define background color
@@ -273,25 +267,20 @@ int main(int argc, char* argv[]){
         DrawVirtualObject(bloon.object_model_name);
 
         // draw monkeys
-        if(g_RightMouseButtonPressed){
-            tem_macaco = true;
-
-            printf("\n%f %f", g_LastCursorPosX, g_LastCursorPosY);
-
-            // tela: x = [0, 800], y = [0, 600]
-            // mapa: x = [-9, 9], y = [-6, 6]
-
-            monkey.translation.x = ((g_LastCursorPosX / 400) - 1) * 9;
-            monkey.translation.z = ((g_LastCursorPosY / 300) - 1) * 6;
+        for(int i=0; i<monkeys.size(); i++){
+            model = Matrix_Translate(monkeys[i].translation.x, monkeys[i].translation.y, monkeys[i].translation.z)
+                * Matrix_Scale(monkeys[i].scaling.x, monkeys[i].scaling.y, monkeys[i].scaling.z)
+                * Matrix_Rotate_X(monkeys[i].rotation.x) * Matrix_Rotate_Y(monkeys[i].rotation.y) * Matrix_Rotate_Z(monkeys[i].rotation.z);
+            glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+            glUniform1i(g_object_id_uniform, monkeys[i].object_model_id);
+            DrawVirtualObject(monkeys[i].object_model_name);
         }
 
-        if(tem_macaco){
-            model = Matrix_Translate(monkey.translation.x, monkey.translation.y, monkey.translation.z)
-                * Matrix_Scale(monkey.scaling.x, monkey.scaling.y, monkey.scaling.z)
-                * Matrix_Rotate_X(monkey.rotation.x) * Matrix_Rotate_Y(monkey.rotation.y) * Matrix_Rotate_Z(monkey.rotation.z);
-            glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-            glUniform1i(g_object_id_uniform, monkey.object_model_id);
-            DrawVirtualObject(monkey.object_model_name);
+        if(g_RightMouseButtonPressed && canPlaceMonkey){
+            float translation_x = ((g_LastCursorPosX / (800/2)) - 1) * 8.26;
+            float translation_z = ((g_LastCursorPosY / (600/2)) - 1) * 6.44;
+
+            placeMonkey(translation_x, translation_z);
         }
 
         // print projection matrix

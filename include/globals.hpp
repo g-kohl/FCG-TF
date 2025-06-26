@@ -1,11 +1,15 @@
 #pragma once
 
+// C++ headers
+#include <vector>
+
 // OpenGL headers
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 // Local headers
 #include "camera.hpp"
+#include "monkey.hpp"
 
 // GPU Program
 extern GLuint g_GpuProgramID;
@@ -36,6 +40,12 @@ extern bool SPACE_pressed;
 // reset balloon flag
 extern bool B_pressed;
 
+// player's monkeys
+extern std::vector<Monkey> monkeys;
+
+// place monkeys flag
+extern bool canPlaceMonkey;
+
 // create camera
 extern Camera camera;
 
@@ -44,6 +54,7 @@ extern float g_CameraTheta;
 extern float g_CameraPhi;
 extern float g_CameraDistance;
 
+// cursor position
 extern double g_LastCursorPosX, g_LastCursorPosY;
 
 // mouse button flags

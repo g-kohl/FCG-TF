@@ -1,5 +1,7 @@
 #include "monkey.hpp"
 
+std::vector<Monkey> monkeys;
+
 Monkey::Monkey(float t_x,float t_y, float t_z, float s_x, float s_y, float s_z, float r_x, float r_y, float r_z, const char* name, int id){
     translation = glm::vec3(t_x, t_y, t_z);
     scaling = glm::vec3(s_x, s_y, s_z);
@@ -8,4 +10,14 @@ Monkey::Monkey(float t_x,float t_y, float t_z, float s_x, float s_y, float s_z, 
     object_model_name = name;
     object_model_id = id;
     level = 1;
+}
+
+void placeMonkey(float t_x, float t_z){
+    Monkey monkey = Monkey(
+        t_x, -1.1f, t_z,
+        0.008f, 0.008f, 0.008f,
+        0.0f, M_PI, 0.0f,
+        "monkey_level_1", 2);
+
+    monkeys.push_back(monkey);
 }

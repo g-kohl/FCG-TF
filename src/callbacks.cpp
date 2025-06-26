@@ -152,6 +152,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 
     if(key == GLFW_KEY_C && action == GLFW_PRESS){
         camera.reset(g_CameraTheta, g_CameraPhi, g_CameraDistance);
+        canPlaceMonkey = true;
     }
 }
 

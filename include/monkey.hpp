@@ -1,5 +1,11 @@
 #pragma once
 
+// C headers
+#include <cmath>
+
+// C++ headers
+#include <vector>
+
 // GLM headers
 #include <glm/vec3.hpp>
 
@@ -13,3 +19,5 @@ class Monkey{
 
     private:
 };
+
+void placeMonkey(float t_x, float t_z);
