@@ -127,30 +127,66 @@ int main(int argc, char* argv[]){
     float t_time;
 
     std::vector<glm::vec4> points = {
-        glm::vec4(-8.0f, 0.0f, -1.6f, 1.0f),
-        glm::vec4(-4.15f, 0.0f, -1.6f, 1.0f),
-        glm::vec4(-0.3f, 0.0f, -1.6f, 1.0f),
+        glm::vec4(-9.2f, 0.0f, -1.6f, 1.0f),  
+        glm::vec4(-6.8f, 0.0f, -1.6f, 1.0f),
+        glm::vec4(-4.4f, 0.0f, -1.6f, 1.0f),
 
-        glm::vec4(3.0f, 0.0f, -7.0f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, -5.0f, 1.0f),
+        glm::vec4(-2.0f, 0.0f, -1.6f, 1.0f),
+        glm::vec4(0.0f, 0.0f, -1.6f, 1.0f),
+        glm::vec4(-0.05f, 0.0f, -3.0f, 1.0f),
 
-        glm::vec4(-3.5f, 0.0f, 0.5f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, 6.0f, 1.0f),
+        glm::vec4(-0.05f, 0.0f, -4.0f, 1.0f),
+        glm::vec4(-0.05f, 0.0f, -5.0f, 1.0f),
+        glm::vec4(-0.8f, 0.0f, -6.3f, 1.0f),
 
-        glm::vec4(-8.0f, 0.0f, 4.5f, 1.0f),
-        glm::vec4(-5.0f, 0.0f, 1.5f, 1.0f),
+        glm::vec4(-1.8f, 0.0f, -6.3f, 1.0f),
+        glm::vec4(-2.8f, 0.0f, -6.3f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, -5.2f, 1.0f),
 
-        glm::vec4(-1.25f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(2.5f, 0.0f, 1.5f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, -4.2f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, -2.8f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, -1.4f, 1.0f),
 
-        glm::vec4(2.0f, 0.0f, -5.0f, 1.0f),
-        glm::vec4(5.0f, 0.0f, -3.0f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, 0.0f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, 1.3f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, 2.6f, 1.0f),
 
-        glm::vec4(5.0f, 0.0f, 0.75f, 1.0f),
-        glm::vec4(5.0f, 0.0f, 4.5f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, 3.9f, 1.0f),
+        glm::vec4(-3.5f, 0.0f, 4.9f, 1.0f),
+        glm::vec4(-4.1f, 0.0f, 6.1f, 1.0f),
 
-        glm::vec4(-2.0f, 0.0f, 3.0f, 1.0f),
-        glm::vec4(-1.3f, 0.0f, 9.0f, 1.0f),
+        glm::vec4(-5.1f, 0.0f, 6.1f, 1.0f),
+        glm::vec4(-6.1f, 0.0f, 6.1f, 1.0f),
+        glm::vec4(-6.8f, 0.0f, 4.9f, 1.0f),
+
+        glm::vec4(-6.8f, 0.0f, 3.9f, 1.0f),
+        glm::vec4(-6.8f, 0.0f, 2.9f, 1.0f),
+        glm::vec4(-5.7f, 0.0f, 1.5f, 1.0f),
+
+        glm::vec4(-4.7f, 0.0f, 1.5f, 1.0f),
+        glm::vec4(-2.97f, 0.0f, 1.5f, 1.0f),
+        glm::vec4(-1.24f, 0.0f, 1.5f, 1.0f),
+
+        glm::vec4(0.5f, 0.0f, 1.5f, 1.0f),
+        glm::vec4(1.5f, 0.0f, 1.5f, 1.0f),
+        glm::vec4(2.8f, 0.0f, -0.3f, 1.0f),
+
+        glm::vec4(2.8f, 0.0f, -1.3f, 1.0f),
+        glm::vec4(2.8f, 0.0f, -3.3f, 1.0f),
+        glm::vec4(5.0f, 0.0f, -3.3f, 1.0f),
+
+        glm::vec4(5.0f, 0.0f, -1.3f, 1.0f),
+        glm::vec4(5.0f, 0.0f, 0.14f, 1.0f),
+        glm::vec4(5.0f, 0.0f, 1.57f, 1.0f),
+
+        glm::vec4(5.0f, 0.0f, 3.0f, 1.0f),
+        glm::vec4(5.0f, 0.0f, 3.83f, 1.0f),
+        glm::vec4(2.8f, 0.0f, 4.5f, 1.0f),
+
+        glm::vec4(0.1f, 0.0f, 4.5f, 1.0f),
+        glm::vec4(-1.1f, 0.0f, 4.5f, 1.0f),
+        glm::vec4(-1.2f, 0.0f, 8.5f, 1.0f),
+        glm::vec4(-1.2f, 0.0f, 9.5f, 1.0f),
     };
 
     // Initial bloon position 
