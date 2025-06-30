@@ -1,67 +1,124 @@
 #version 330 core
 
-// Atributos de vértice recebidos como entrada ("in") pelo Vertex Shader.
-// Veja a função BuildTrianglesAndAddToVirtualScene() em "main.cpp".
+// "in" attributes
 layout (location = 0) in vec4 model_coefficients;
 layout (location = 1) in vec4 normal_coefficients;
 layout (location = 2) in vec2 texture_coefficients;
 
-// Matrizes computadas no código C++ e enviadas para a GPU
+// matrices
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-// Atributos de vértice que serão gerados como saída ("out") pelo Vertex Shader.
-// ** Estes serão interpolados pelo rasterizador! ** gerando, assim, valores
-// para cada fragmento, os quais serão recebidos como entrada pelo Fragment
-// Shader. Veja o arquivo "shader_fragment.glsl".
+// object id
+#define PLANE 0
+#define BLOON 1
+#define MONKEY_LEVEL_1 2
+#define MONKEY_LEVEL_2 3
+uniform int object_id;
+
+// shading model
+#define PHONG 0
+#define GOURAUD 1
+uniform int shading_model;
+
+// texture
+uniform sampler2D TextureImage0;
+uniform sampler2D TextureImage1;
+uniform sampler2D TextureImage2;
+
+// vertex attributes
 out vec4 position_world;
 out vec4 position_model;
 out vec4 normal;
 out vec2 texcoords;
+out vec4 vertex_color;
 
 void main()
 {
-    // A variável gl_Position define a posição final de cada vértice
-    // OBRIGATORIAMENTE em "normalized device coordinates" (NDC), onde cada
-    // coeficiente estará entre -1 e 1 após divisão por w.
-    // Veja {+NDC2+}.
-    //
-    // O código em "main.cpp" define os vértices dos modelos em coordenadas
-    // locais de cada modelo (array model_coefficients). Abaixo, utilizamos
-    // operações de modelagem, definição da câmera, e projeção, para computar
-    // as coordenadas finais em NDC (variável gl_Position). Após a execução
-    // deste Vertex Shader, a placa de vídeo (GPU) fará a divisão por W. Veja
-    // slides 41-67 e 69-86 do documento Aula_09_Projecoes.pdf.
-
+    // vertex position in NDC
     gl_Position = projection * view * model * model_coefficients;
 
-    // Como as variáveis acima  (tipo vec4) são vetores com 4 coeficientes,
-    // também é possível acessar e modificar cada coeficiente de maneira
-    // independente. Esses são indexados pelos nomes x, y, z, e w (nessa
-    // ordem, isto é, 'x' é o primeiro coeficiente, 'y' é o segundo, ...):
-    //
-    //     gl_Position.x = model_coefficients.x;
-    //     gl_Position.y = model_coefficients.y;
-    //     gl_Position.z = model_coefficients.z;
-    //     gl_Position.w = model_coefficients.w;
-    //
-
-    // Agora definimos outros atributos dos vértices que serão interpolados pelo
-    // rasterizador para gerar atributos únicos para cada fragmento gerado.
-
-    // Posição do vértice atual no sistema de coordenadas global (World).
+    // vertex position in world coordinates
     position_world = model * model_coefficients;
 
-    // Posição do vértice atual no sistema de coordenadas local do modelo.
+    // vertex position in local coordinates
     position_model = model_coefficients;
 
-    // Normal do vértice atual no sistema de coordenadas global (World).
-    // Veja slides 123-151 do documento Aula_07_Transformacoes_Geometricas_3D.pdf.
+    // vertex normal
     normal = inverse(transpose(model)) * normal_coefficients;
     normal.w = 0.0;
 
-    // Coordenadas de textura obtidas do arquivo OBJ (se existirem!)
+    // texture coordinates
     texcoords = texture_coefficients;
+
+    if(shading_model == PHONG){
+        vertex_color = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+    else if(shading_model == GOURAUD){
+        vec4 origin = vec4(0.0, 0.0, 0.0, 1.0);
+        vec4 camera_position = inverse(view) * origin;
+
+        vec4 p = position_world;
+        vec4 n = normalize(normal);
+        vec4 l = normalize(vec4(-1.0,1.0,0.0,0.0));
+        vec4 v = normalize(camera_position - p);
+        vec4 h = normalize(v + l);
+
+        float U = 0.0;
+        float V = 0.0;
+
+        vec3 Kd;
+        vec3 Ks;
+        vec3 Ka;
+        float q;
+
+        if(object_id == BLOON){
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage1, vec2(U,V)).rgb;
+            Ks = vec3(0.8,0.8,0.8);
+            Ka = vec3(0.0,0.0,0.0);
+            q = 50.0;
+        }
+        else if(object_id == PLANE){
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage0, vec2(U,V)).rgb;
+            Ks = vec3(0.0,0.0,0.0);
+            Ka = vec3(0.0,0.0,0.0);
+            q = 1.0;
+        }
+        else if(object_id == MONKEY_LEVEL_1){
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Ks = vec3(0.0,0.0,0.0);
+            Ka = vec3(0.0,0.0,0.0);
+            q = 1.0;
+        }
+        else if(object_id == MONKEY_LEVEL_2){
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Ks = vec3(0.0,0.0,0.0);
+            Ka = vec3(0.0,0.0,0.0);
+            q = 1.0;
+        }
+
+        vec3 I = vec3(1.0,1.0,1.0);
+        vec3 Ia = vec3(0.2,0.2,0.2);
+
+        vec3 lambert = Kd*I*max(0,dot(n,l));
+        vec3 ambient = Ka*Ia;
+        vec3 blinn_phong = Ks*I*pow(dot(n,h),q);
+
+        vertex_color.rgb = lambert + ambient + blinn_phong;
+        vertex_color.a = 1;
+    }
 }
 

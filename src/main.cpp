@@ -234,11 +234,18 @@ int main(int argc, char* argv[]){
         #define MONKEY_LEVEL_1 2
         #define MONKEY_LEVEL_2 3
 
+        // shading model
+        #define PHONG 0
+        #define GOURAUD 1
+
         // draw plane
         model = Matrix_Translate(0.0f,-1.1f,0.0f)
               * Matrix_Scale(10.0f,1.0f,6.44f);
+
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, PLANE);
+        glUniform1i(g_shading_uniform, PHONG);
+
         DrawVirtualObject("plane");
 
         // get delta_time
@@ -262,8 +269,11 @@ int main(int argc, char* argv[]){
         model = Matrix_Translate(bloon.translation.x, bloon.translation.y, bloon.translation.z)
               * Matrix_Scale(bloon.scaling.x, bloon.scaling.y, bloon.scaling.z)
               * Matrix_Rotate_X(bloon.rotation.x) * Matrix_Rotate_Y(bloon.rotation.y) * Matrix_Rotate_Z(bloon.rotation.z);
+
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, bloon.object_model_id);
+        glUniform1i(g_shading_uniform, PHONG);
+
         DrawVirtualObject(bloon.object_model_name);
 
         // draw monkeys
@@ -271,8 +281,15 @@ int main(int argc, char* argv[]){
             model = Matrix_Translate(monkeys[i].translation.x, monkeys[i].translation.y, monkeys[i].translation.z)
                 * Matrix_Scale(monkeys[i].scaling.x, monkeys[i].scaling.y, monkeys[i].scaling.z)
                 * Matrix_Rotate_X(monkeys[i].rotation.x) * Matrix_Rotate_Y(monkeys[i].rotation.y) * Matrix_Rotate_Z(monkeys[i].rotation.z);
+
             glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
             glUniform1i(g_object_id_uniform, monkeys[i].object_model_id);
+
+            if(monkeys[i].level == 1)
+                glUniform1i(g_shading_uniform, GOURAUD);
+            else
+                glUniform1i(g_shading_uniform, PHONG);
+
             DrawVirtualObject(monkeys[i].object_model_name);
         }
 

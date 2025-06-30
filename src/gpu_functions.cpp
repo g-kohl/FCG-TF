@@ -18,6 +18,7 @@ void LoadShadersFromFiles(){
     g_view_uniform = glGetUniformLocation(g_GpuProgramID, "view");
     g_projection_uniform = glGetUniformLocation(g_GpuProgramID, "projection");
     g_object_id_uniform = glGetUniformLocation(g_GpuProgramID, "object_id");
+    g_shading_uniform = glGetUniformLocation(g_GpuProgramID, "shading_model");
     g_bbox_min_uniform = glGetUniformLocation(g_GpuProgramID, "bbox_min");
     g_bbox_max_uniform = glGetUniformLocation(g_GpuProgramID, "bbox_max");
 
