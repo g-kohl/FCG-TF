@@ -118,6 +118,9 @@ int main(int argc, char* argv[]){
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    // previous right mouse button state
+    bool previousRightMouseButtonPressed = false;
+
     // start timer
     float current_time = (float)glfwGetTime();
     float previous_time_camera = current_time;
@@ -191,6 +194,9 @@ int main(int argc, char* argv[]){
 
     // Initial bloon position 
     glm::vec4 bloon_position = glm::vec4(-8.0f, 0.0f, -2.0f, 0.1f);
+
+    // reset camera
+    camera.reset(g_CameraTheta, g_CameraPhi, g_CameraDistance);
 
     // render window
     while(!glfwWindowShouldClose(window)){
@@ -275,8 +281,7 @@ int main(int argc, char* argv[]){
         #define GOURAUD 1
 
         // draw plane
-        model = Matrix_Translate(0.0f,-1.1f,0.0f)
-              * Matrix_Scale(10.0f,1.0f,6.44f);
+        model = Matrix_Scale(10.0f,1.0f,6.44f);
 
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, PLANE);
@@ -297,7 +302,7 @@ int main(int argc, char* argv[]){
 
         // draw bloons
         Bloon bloon = Bloon(
-            bloon_position.x, 0.0f, bloon_position.z,
+            bloon_position.x, 1.0f, bloon_position.z,
             0.3f, 0.3f, 0.3f,
             0.0f, 0.0f, 0.0f,
             "bloon", BLOON);
@@ -313,7 +318,7 @@ int main(int argc, char* argv[]){
         DrawVirtualObject(bloon.object_model_name);
 
         // draw monkeys
-        for(int i=0; i<monkeys.size(); i++){
+        for(int i=0; i<int(monkeys.size()); i++){
             model = Matrix_Translate(monkeys[i].translation.x, monkeys[i].translation.y, monkeys[i].translation.z)
                 * Matrix_Scale(monkeys[i].scaling.x, monkeys[i].scaling.y, monkeys[i].scaling.z)
                 * Matrix_Rotate_X(monkeys[i].rotation.x) * Matrix_Rotate_Y(monkeys[i].rotation.y) * Matrix_Rotate_Z(monkeys[i].rotation.z);
@@ -329,12 +334,21 @@ int main(int argc, char* argv[]){
             DrawVirtualObject(monkeys[i].object_model_name);
         }
 
-        if(g_RightMouseButtonPressed && canPlaceMonkey){
+        if((!previousRightMouseButtonPressed && g_RightMouseButtonPressed) && inStrategyMode && player.canBuy(50)){
+            player.discountMoney(50);
+
             float translation_x = ((g_LastCursorPosX / (800/2)) - 1) * 8.26;
             float translation_z = ((g_LastCursorPosY / (600/2)) - 1) * 6.44;
 
             placeMonkey(translation_x, translation_z);
         }
+
+        if(int(monkeys.size()) == 2){
+            monkeys[0].upgradeMonkey();
+        }
+
+        // update right mouse button control
+        previousRightMouseButtonPressed = g_RightMouseButtonPressed;
 
         // print projection matrix
         TextRendering_ShowProjection(window);

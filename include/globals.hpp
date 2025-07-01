@@ -10,6 +10,7 @@
 // Local headers
 #include "camera.hpp"
 #include "monkey.hpp"
+#include "player.hpp"
 
 // GPU Program
 extern GLuint g_GpuProgramID;
@@ -41,11 +42,14 @@ extern bool SPACE_pressed;
 // reset balloon flag
 extern bool B_pressed;
 
+// player
+extern Player player;
+
 // player's monkeys
 extern std::vector<Monkey> monkeys;
 
 // place monkeys flag
-extern bool canPlaceMonkey;
+extern bool inStrategyMode;
 
 // create camera
 extern Camera camera;

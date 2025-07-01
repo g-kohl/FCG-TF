@@ -140,19 +140,13 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         else if(action == GLFW_REPEAT);
     }
 
-    if(key == GLFW_KEY_R && action == GLFW_PRESS){
-        // LoadShadersFromFiles();
-        // fprintf(stdout,"Shaders recarregados!\n");
-        // fflush(stdout);
-    }
-
     if(key == GLFW_KEY_F && action == GLFW_PRESS){
         camera.free = !camera.free;
     }
 
     if(key == GLFW_KEY_C && action == GLFW_PRESS){
         camera.reset(g_CameraTheta, g_CameraPhi, g_CameraDistance);
-        canPlaceMonkey = true;
+        inStrategyMode = true;
     }
 }
 

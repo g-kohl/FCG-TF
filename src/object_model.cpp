@@ -387,7 +387,7 @@ void ObjectModel::PrintObjModelInfo(){
   }
 }
 
-void DrawVirtualObject(const char* object_name){
+void DrawVirtualObject(std::string object_name){
     // bind VAO
     glBindVertexArray(g_VirtualScene[object_name].vertex_array_object_id);
 

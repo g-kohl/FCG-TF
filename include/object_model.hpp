@@ -5,6 +5,7 @@
 
 // C++ headers
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 // Load object headers
@@ -31,4 +32,4 @@ class ObjectModel{
 
 };
 
-void DrawVirtualObject(const char* object_name);
+void DrawVirtualObject(std::string object_name);
