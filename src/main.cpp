@@ -19,7 +19,6 @@
 #include "callbacks.hpp"
 #include "gpu_functions.hpp"
 #include "show_text.hpp"
-#include "animation_functions.hpp"
 #include "monkey.hpp"
 #include "bloon.hpp"
 #include "player.hpp"
@@ -127,76 +126,12 @@ int main(int argc, char* argv[]){
     float previous_time_bloon = current_time;
     float delta_time_camera;
     float delta_time_bloon;
-    float t_time;
-
-    std::vector<glm::vec4> points = {
-        glm::vec4(-9.2f, 0.0f, -1.6f, 1.0f),  
-        glm::vec4(-6.8f, 0.0f, -1.6f, 1.0f),
-        glm::vec4(-4.4f, 0.0f, -1.6f, 1.0f),
-
-        glm::vec4(-2.0f, 0.0f, -1.6f, 1.0f),
-        glm::vec4(0.0f, 0.0f, -1.6f, 1.0f),
-        glm::vec4(-0.05f, 0.0f, -3.0f, 1.0f),
-
-        glm::vec4(-0.05f, 0.0f, -4.0f, 1.0f),
-        glm::vec4(-0.05f, 0.0f, -5.0f, 1.0f),
-        glm::vec4(-0.8f, 0.0f, -6.3f, 1.0f),
-
-        glm::vec4(-1.8f, 0.0f, -6.3f, 1.0f),
-        glm::vec4(-2.8f, 0.0f, -6.3f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, -5.2f, 1.0f),
-
-        glm::vec4(-3.5f, 0.0f, -4.2f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, -2.8f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, -1.4f, 1.0f),
-
-        glm::vec4(-3.5f, 0.0f, 0.0f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, 1.3f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, 2.6f, 1.0f),
-
-        glm::vec4(-3.5f, 0.0f, 3.9f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, 4.9f, 1.0f),
-        glm::vec4(-4.1f, 0.0f, 6.1f, 1.0f),
-
-        glm::vec4(-5.1f, 0.0f, 6.1f, 1.0f),
-        glm::vec4(-6.1f, 0.0f, 6.1f, 1.0f),
-        glm::vec4(-6.8f, 0.0f, 4.9f, 1.0f),
-
-        glm::vec4(-6.8f, 0.0f, 3.9f, 1.0f),
-        glm::vec4(-6.8f, 0.0f, 2.9f, 1.0f),
-        glm::vec4(-5.7f, 0.0f, 1.5f, 1.0f),
-
-        glm::vec4(-4.7f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(-2.97f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(-1.24f, 0.0f, 1.5f, 1.0f),
-
-        glm::vec4(0.5f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(1.5f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(2.8f, 0.0f, -0.3f, 1.0f),
-
-        glm::vec4(2.8f, 0.0f, -1.3f, 1.0f),
-        glm::vec4(2.8f, 0.0f, -3.3f, 1.0f),
-        glm::vec4(5.0f, 0.0f, -3.3f, 1.0f),
-
-        glm::vec4(5.0f, 0.0f, -1.3f, 1.0f),
-        glm::vec4(5.0f, 0.0f, 0.14f, 1.0f),
-        glm::vec4(5.0f, 0.0f, 1.57f, 1.0f),
-
-        glm::vec4(5.0f, 0.0f, 3.0f, 1.0f),
-        glm::vec4(5.0f, 0.0f, 3.83f, 1.0f),
-        glm::vec4(2.8f, 0.0f, 4.5f, 1.0f),
-
-        glm::vec4(0.1f, 0.0f, 4.5f, 1.0f),
-        glm::vec4(-1.1f, 0.0f, 4.5f, 1.0f),
-        glm::vec4(-1.2f, 0.0f, 8.5f, 1.0f),
-        glm::vec4(-1.2f, 0.0f, 9.5f, 1.0f),
-    };
-
-    // Initial bloon position 
-    glm::vec4 bloon_position = glm::vec4(-8.0f, 0.0f, -2.0f, 0.1f);
 
     // reset camera
     camera.reset(g_CameraTheta, g_CameraPhi, g_CameraDistance);
+
+    // setup first level
+    setupLevel(1);
 
     // render window
     while(!glfwWindowShouldClose(window)){
@@ -236,8 +171,9 @@ int main(int argc, char* argv[]){
         if(SHIFT_pressed)
             camera.move('D', delta_time_camera); // down
 
-        if(B_pressed)
-            t_time = 0;
+        if(B_pressed){
+
+        }
 
         // compute view matrix
         glm::mat4 view = Matrix_Camera_View(camera.position, camera.view_vector, camera.up_vector);
@@ -292,30 +228,21 @@ int main(int argc, char* argv[]){
         // get delta_time
         delta_time_bloon = current_time - previous_time_bloon;
         previous_time_bloon = current_time;
-        t_time += delta_time_bloon;
 
-        glm::vec4 d = bezier_spline(points, t_time);
-
-        // update bloon position
-        glm::vec4 v_vec = d - bloon_position;
-        bloon_position = bloon_position + v_vec; 
+        updateBloons(delta_time_bloon);
 
         // draw bloons
-        Bloon bloon = Bloon(
-            bloon_position.x, 1.0f, bloon_position.z,
-            0.3f, 0.3f, 0.3f,
-            0.0f, 0.0f, 0.0f,
-            "bloon", BLOON);
+        for(int i=0; i<int(bloons.size()); i++){
+            model = Matrix_Translate(bloons[i].translation.x, bloons[i].translation.y, bloons[i].translation.z)
+                * Matrix_Scale(bloons[i].scaling.x, bloons[i].scaling.y, bloons[i].scaling.z)
+                * Matrix_Rotate_X(bloons[i].rotation.x) * Matrix_Rotate_Y(bloons[i].rotation.y) * Matrix_Rotate_Z(bloons[i].rotation.z);
 
-        model = Matrix_Translate(bloon.translation.x, bloon.translation.y, bloon.translation.z)
-              * Matrix_Scale(bloon.scaling.x, bloon.scaling.y, bloon.scaling.z)
-              * Matrix_Rotate_X(bloon.rotation.x) * Matrix_Rotate_Y(bloon.rotation.y) * Matrix_Rotate_Z(bloon.rotation.z);
+            glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+            glUniform1i(g_object_id_uniform, bloons[i].object_model_id);
+            glUniform1i(g_shading_uniform, PHONG);
 
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, bloon.object_model_id);
-        glUniform1i(g_shading_uniform, PHONG);
-
-        DrawVirtualObject(bloon.object_model_name);
+            DrawVirtualObject(bloons[i].object_model_name);
+        }
 
         // draw monkeys
         for(int i=0; i<int(monkeys.size()); i++){
@@ -345,6 +272,17 @@ int main(int argc, char* argv[]){
 
         if(int(monkeys.size()) == 2){
             monkeys[0].upgradeMonkey();
+        }
+
+        for(int i=0; i<int(bloons.size()); i++){
+            if(bloons[i].reachedEnd()){
+                player.discountLife(1);
+                bloons.erase(bloons.begin()+i);
+            }
+        }
+
+        if(player.lost()){
+            break;
         }
 
         // update right mouse button control

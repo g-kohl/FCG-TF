@@ -10,6 +10,7 @@
 // Local headers
 #include "camera.hpp"
 #include "monkey.hpp"
+#include "bloon.hpp"
 #include "player.hpp"
 
 // GPU Program
@@ -41,6 +42,9 @@ extern bool SPACE_pressed;
 
 // reset balloon flag
 extern bool B_pressed;
+
+// bloons
+extern std::vector<Bloon> bloons;
 
 // player
 extern Player player;

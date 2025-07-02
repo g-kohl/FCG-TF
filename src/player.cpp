@@ -4,7 +4,7 @@ Player player = Player();
 bool inStrategyMode;
 
 Player::Player(){
-    life = 10;
+    life = 0;
     money = 100;
 }
 
