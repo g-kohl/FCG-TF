@@ -1,8 +1,9 @@
 fazer:
-- tornar curva de bezier cúbica
 - ajustar pontos de controle
 - posicionar macacos
 - apagar balões
 
 concluído:
 - classe para balão e macaco
+- tornar curva de bezier cúbica
+- adicionar novos pontos de controle
