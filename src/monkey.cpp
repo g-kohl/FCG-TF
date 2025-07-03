@@ -2,28 +2,41 @@
 
 std::vector<Monkey> monkeys;
 
-Monkey::Monkey(float t_x,float t_y, float t_z, float s_x, float s_y, float s_z, float r_x, float r_y, float r_z, std::string name, int id){
-    translation = glm::vec3(t_x, t_y, t_z);
-    scaling = glm::vec3(s_x, s_y, s_z);
-    rotation = glm::vec3(r_x, r_y, r_z);
+Monkey::Monkey(glm::vec3 translation, glm::vec3 rotation, std::string modelName, int modelId)
+    : translation(translation), rotation(rotation), modelName(modelName), modelId(modelId), level(1), targetId(-1) {}
 
-    object_model_name = name;
-    object_model_id = id;
-    level = 1;
+
+glm::vec3 Monkey::getTranslation(){
+    return translation;
+}
+    
+glm::vec3 Monkey::getRotation(){
+    return rotation;
 }
 
-void Monkey::upgradeMonkey(){
-    object_model_name = "monkey_level_2";
-    object_model_id = 2;
+std::string Monkey::getModelName(){
+    return modelName;
+}
+
+int Monkey::getLevel(){
+    return level;
+}
+
+void Monkey::upgrade(){
+    modelName = "monkey_level_2";
+    modelId = 2;
     level = 2;
 }
 
+int Monkey::getModelId(){
+    return modelId;
+}
+
 void placeMonkey(float t_x, float t_z){
-    Monkey monkey = Monkey(
-        t_x, 0.0f, t_z,
-        1.0f, 1.0f, 1.0f,
-        0.0f, 0.0f, 0.0f,
-        "monkey_level_1", 2);
+    glm::vec3 translationVector = glm::vec3(t_x, 0.0f, t_z);
+    glm::vec3 rotationVector = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    Monkey monkey = Monkey(translationVector, rotationVector, "monkey_level_1", 2);
 
     monkeys.push_back(monkey);
 }

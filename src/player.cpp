@@ -1,31 +1,34 @@
 #include "player.hpp"
 
 Player player = Player();
-bool inStrategyMode;
 
-Player::Player(){
-    life = 0;
-    money = 100;
-}
+Player::Player(int life, int money, bool strategyMode)
+    : life(life), money(money), strategyMode(strategyMode) {}
 
 void Player::discountLife(int damage){
     life -= damage;
 }
 
 bool Player::lost(){
-    if(life < 0)
-        return true;
-
-    return false;
+    return life <= 0;
 }
 
 void Player::discountMoney(int price){    
     money -= price;
 }
 
-bool Player::canBuy(int price){
-    if(money - price >= 0)
-        return true;
+void Player::giveMoney(int cash){
+    money += cash;
+}
 
-    return false;
+bool Player::canBuy(int price){
+    return money >= price;
+}
+
+bool Player::inStrategyMode(){
+    return strategyMode;
+}
+
+void Player::setStrategyMode(bool status){
+    strategyMode = status;
 }

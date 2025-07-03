@@ -11,12 +11,29 @@ Camera::Camera(float theta, float phi, float distance){
     position = glm::vec4(x,y,z,1.0f);
 
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);
-    view_vector = lookat - position;
-    up_vector = glm::vec4(0.0f,1.0f,0.0f,0.0f);
-    w_vector = -view_vector;
-    w_vector /= norm(w_vector);
-    u_vector = crossproduct(up_vector, w_vector);
-    u_vector /= norm(u_vector);
+    upVector = glm::vec4(0.0f,1.0f,0.0f,0.0f);
+
+    computeVectors();
+}
+
+bool Camera::getMode(){
+    return free;
+}
+
+void Camera::setMode(bool mode){
+    free = mode;
+}
+
+glm::vec4 Camera::getPosition(){
+    return position;
+}
+
+glm::vec4 Camera::getViewVector(){
+    return viewVector;
+}
+
+glm::vec4 Camera::getUpVector(){
+    return upVector;
 }
 
 void Camera::move(char direction, float delta_time){
@@ -25,22 +42,22 @@ void Camera::move(char direction, float delta_time){
 
     switch(direction) {
         case 'F':
-            position += -w_vector * speed * delta_time;
+            position += -wVector * speed * delta_time;
             break;
         case 'L':
-            position += -u_vector * speed * delta_time;
+            position += -uVector * speed * delta_time;
             break;
         case 'B':
-            position += w_vector * speed * delta_time;
+            position += wVector * speed * delta_time;
             break;
         case 'R':
-            position += u_vector * speed * delta_time;
+            position += uVector * speed * delta_time;
             break;
         case 'U':
-            position += up_vector * speed * delta_time;
+            position += upVector * speed * delta_time;
             break;
         case 'D':
-            position += -up_vector * speed * delta_time;
+            position += -upVector * speed * delta_time;
             break;
         default:
             break;
@@ -63,11 +80,7 @@ void Camera::update(float theta, float phi, float distance){
         position = glm::vec4(x,y,z,1.0f);
     }
 
-    view_vector = lookat - position;
-    w_vector = -view_vector;
-    w_vector /= norm(w_vector);
-    u_vector = crossproduct(up_vector, w_vector);
-    u_vector /= norm(u_vector);
+    computeVectors();
 }
 
 void Camera::reset(float &theta, float &phi, float &distance){
@@ -76,4 +89,12 @@ void Camera::reset(float &theta, float &phi, float &distance){
     distance = 10.0f;
     free = false;
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);
+}
+
+void Camera::computeVectors(){
+    viewVector = lookat - position;
+    wVector = -viewVector;
+    wVector /= norm(wVector);
+    uVector = crossproduct(upVector, wVector);
+    uVector /= norm(uVector);
 }

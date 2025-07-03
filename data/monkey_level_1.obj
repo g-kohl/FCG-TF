@@ -2,6 +2,7 @@
 # www.blender.org
 mtllib monkey_level_1.mtl
 o monkey_level_1
+g monkey_level_1
 v -0.052647 1.417279 -0.191441
 v -0.040819 1.417279 -0.190229
 v 0.003239 1.417279 -0.153778

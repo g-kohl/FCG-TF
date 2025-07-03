@@ -4,7 +4,7 @@
 in vec4 position_world;
 in vec4 normal;
 in vec4 position_model;
-in vec2 texcoords;
+in vec2 texture_coordinates;
 in vec4 vertex_color;
 
 // matrices
@@ -29,9 +29,9 @@ uniform vec4 bbox_min;
 uniform vec4 bbox_max;
 
 // texture
-uniform sampler2D TextureImage0;
-uniform sampler2D TextureImage1;
-uniform sampler2D TextureImage2;
+uniform sampler2D texture_image_0;
+uniform sampler2D texture_image_1;
+uniform sampler2D texture_image_2;
 
 // color
 out vec4 color;
@@ -55,38 +55,38 @@ void main(){
         vec3 Ka;
         float q;
 
-        if(object_id == BLOON){
-            U = texcoords.x;
-            V = texcoords.y;
+        if(object_id == PLANE){
+            U = texture_coordinates.x;
+            V = texture_coordinates.y;
 
-            Kd = texture(TextureImage1, vec2(U,V)).rgb;
-            Ks = vec3(0.8,0.8,0.8);
-            Ka = vec3(0.0,0.0,0.0);
-            q = 50.0;
-        }
-        else if(object_id == PLANE){
-            U = texcoords.x;
-            V = texcoords.y;
-
-            Kd = texture(TextureImage0, vec2(U,V)).rgb;
+            Kd = texture(texture_image_0, vec2(U,V)).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;
         }
-        else if(object_id == MONKEY_LEVEL_1){
-            U = texcoords.x;
-            V = texcoords.y;
+        else if(object_id == BLOON){
+            U = texture_coordinates.x;
+            V = texture_coordinates.y;
 
-            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Kd = texture(texture_image_1, vec2(U,V)).rgb;
+            Ks = vec3(0.8,0.8,0.8);
+            Ka = vec3(0.0,0.0,0.0);
+            q = 50.0;
+        }
+        else if(object_id == MONKEY_LEVEL_1){
+            U = texture_coordinates.x;
+            V = texture_coordinates.y;
+
+            Kd = texture(texture_image_2, vec2(U,V)).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;
         }
         else if(object_id == MONKEY_LEVEL_2){
-            U = texcoords.x;
-            V = texcoords.y;
+            U = texture_coordinates.x;
+            V = texture_coordinates.y;
 
-            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Kd = texture(texture_image_2, vec2(U,V)).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;

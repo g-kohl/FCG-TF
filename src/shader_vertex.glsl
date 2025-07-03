@@ -22,20 +22,19 @@ uniform int object_id;
 #define GOURAUD 1
 uniform int shading_model;
 
-// texture
-uniform sampler2D TextureImage0;
-uniform sampler2D TextureImage1;
-uniform sampler2D TextureImage2;
+// textures
+uniform sampler2D texture_image_0;
+uniform sampler2D texture_image_1;
+uniform sampler2D texture_image_2;
 
 // vertex attributes
 out vec4 position_world;
 out vec4 position_model;
 out vec4 normal;
-out vec2 texcoords;
+out vec2 texture_coordinates;
 out vec4 vertex_color;
 
-void main()
-{
+void main(){
     // vertex position in NDC
     gl_Position = projection * view * model * model_coefficients;
 
@@ -50,7 +49,7 @@ void main()
     normal.w = 0.0;
 
     // texture coordinates
-    texcoords = texture_coefficients;
+    texture_coordinates = texture_coefficients;
 
     if(shading_model == PHONG){
         vertex_color = vec4(0.0, 0.0, 0.0, 1.0);
@@ -73,38 +72,38 @@ void main()
         vec3 Ka;
         float q;
 
-        if(object_id == BLOON){
-            U = texcoords.x;
-            V = texcoords.y;
+        if(object_id == PLANE){
+            U = texture_coordinates.x;
+            V = texture_coordinates.y;
 
-            Kd = texture(TextureImage1, vec2(U,V)).rgb;
-            Ks = vec3(0.8,0.8,0.8);
-            Ka = vec3(0.0,0.0,0.0);
-            q = 50.0;
-        }
-        else if(object_id == PLANE){
-            U = texcoords.x;
-            V = texcoords.y;
-
-            Kd = texture(TextureImage0, vec2(U,V)).rgb;
+            Kd = texture(texture_image_0, vec2(U,V)).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;
         }
-        else if(object_id == MONKEY_LEVEL_1){
-            U = texcoords.x;
-            V = texcoords.y;
+        else if(object_id == BLOON){
+            U = texture_coordinates.x;
+            V = texture_coordinates.y;
 
-            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Kd = texture(texture_image_1, vec2(U,V)).rgb;
+            Ks = vec3(0.8,0.8,0.8);
+            Ka = vec3(0.0,0.0,0.0);
+            q = 50.0;
+        }
+        else if(object_id == MONKEY_LEVEL_1){
+            U = texture_coordinates.x;
+            V = texture_coordinates.y;
+
+            Kd = texture(texture_image_2, vec2(U,V)).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;
         }
         else if(object_id == MONKEY_LEVEL_2){
-            U = texcoords.x;
-            V = texcoords.y;
+            U = texture_coordinates.x;
+            V = texture_coordinates.y;
 
-            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Kd = texture(texture_image_2, vec2(U,V)).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;

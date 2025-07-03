@@ -5,14 +5,19 @@
 
 class Player{
     public:
-    int life, money;
+        Player(int life=1, int money=100, bool strategyMode=false);
 
-    Player();
-    void discountLife(int damage);
-    bool lost();
-    void discountMoney(int price);
-    bool canBuy(int price);
+        void discountLife(int damage);
+        bool lost();
+
+        void discountMoney(int price);
+        void giveMoney(int cash);
+        bool canBuy(int price);
+
+        bool inStrategyMode();
+        void setStrategyMode(bool status);
 
     private:
-
+        int life, money;
+        bool strategyMode;
 };

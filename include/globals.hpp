@@ -52,9 +52,6 @@ extern Player player;
 // player's monkeys
 extern std::vector<Monkey> monkeys;
 
-// place monkeys flag
-extern bool inStrategyMode;
-
 // create camera
 extern Camera camera;
 

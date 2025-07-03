@@ -13,15 +13,32 @@
 
 class Bloon{
     public:
-        glm::vec3 translation, scaling, rotation;
-        const char* object_model_name;
-        int object_model_id, level;
-        float time;
+        Bloon(glm::vec3 translation, std::string modelName, int modelId);
 
-        Bloon(float t_x,float t_y, float t_z, float s_x, float s_y, float s_z, float r_x, float r_y, float r_z, const char* name, int id);
         bool reachedEnd();
 
+        glm::vec3 getTranslation();
+        void setTranslation(glm::vec4 deltaPosition);
+
+        std::string getModelName();
+
+        int getLevel();
+
+        int getModelId();
+
+        float getTime();
+        void resetTime();
+        void updateTime(float deltaTime);
+
+        bool isBlown();
+        void blow();
+
     private:
+        glm::vec3 translation;
+        std::string modelName;
+        int modelId, level;
+        float time;
+        bool blown;
 };
 
 void setupLevel(int level);

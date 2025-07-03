@@ -172,11 +172,11 @@ int main(int argc, char* argv[]){
             camera.move('D', delta_time_camera); // down
 
         if(B_pressed){
-
+            bloons[0].resetTime();
         }
 
         // compute view matrix
-        glm::mat4 view = Matrix_Camera_View(camera.position, camera.view_vector, camera.up_vector);
+        glm::mat4 view = Matrix_Camera_View(camera.getPosition(), camera.getViewVector(), camera.getUpVector());
 
         // compute projection matrix
         glm::mat4 projection;
@@ -189,8 +189,7 @@ int main(int argc, char* argv[]){
             float field_of_view = 3.141592 / 3.0f;
             projection = Matrix_Perspective(field_of_view, g_ScreenRatio, nearplane, farplane);
         }
-        else
-        {
+        else{
             // ortographic projection
             float t = 1.5f*g_CameraDistance/2.5f;
             float b = -t;
@@ -233,35 +232,40 @@ int main(int argc, char* argv[]){
 
         // draw bloons
         for(int i=0; i<int(bloons.size()); i++){
-            model = Matrix_Translate(bloons[i].translation.x, bloons[i].translation.y, bloons[i].translation.z)
-                * Matrix_Scale(bloons[i].scaling.x, bloons[i].scaling.y, bloons[i].scaling.z)
-                * Matrix_Rotate_X(bloons[i].rotation.x) * Matrix_Rotate_Y(bloons[i].rotation.y) * Matrix_Rotate_Z(bloons[i].rotation.z);
+            if(bloons[i].isBlown())
+                continue;
+                
+            glm::vec3 translation = bloons[i].getTranslation();
+
+            model = Matrix_Translate(translation.x, translation.y, translation.z);
 
             glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-            glUniform1i(g_object_id_uniform, bloons[i].object_model_id);
+            glUniform1i(g_object_id_uniform, bloons[i].getModelId());
             glUniform1i(g_shading_uniform, PHONG);
 
-            DrawVirtualObject(bloons[i].object_model_name);
+            DrawVirtualObject(bloons[i].getModelName());
         }
 
         // draw monkeys
         for(int i=0; i<int(monkeys.size()); i++){
-            model = Matrix_Translate(monkeys[i].translation.x, monkeys[i].translation.y, monkeys[i].translation.z)
-                * Matrix_Scale(monkeys[i].scaling.x, monkeys[i].scaling.y, monkeys[i].scaling.z)
-                * Matrix_Rotate_X(monkeys[i].rotation.x) * Matrix_Rotate_Y(monkeys[i].rotation.y) * Matrix_Rotate_Z(monkeys[i].rotation.z);
+            glm::vec3 translation = monkeys[i].getTranslation();
+            glm::vec3 rotation = monkeys[i].getRotation();
+
+            model = Matrix_Translate(translation.x, translation.y, translation.z)
+                * Matrix_Rotate_X(rotation.x) * Matrix_Rotate_Y(rotation.y) * Matrix_Rotate_Z(rotation.z);
 
             glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-            glUniform1i(g_object_id_uniform, monkeys[i].object_model_id);
+            glUniform1i(g_object_id_uniform, monkeys[i].getModelId());
 
-            if(monkeys[i].level == 1)
+            if(monkeys[i].getLevel() == 1)
                 glUniform1i(g_shading_uniform, GOURAUD);
             else
                 glUniform1i(g_shading_uniform, PHONG);
 
-            DrawVirtualObject(monkeys[i].object_model_name);
+            DrawVirtualObject(monkeys[i].getModelName());
         }
 
-        if((!previousRightMouseButtonPressed && g_RightMouseButtonPressed) && inStrategyMode && player.canBuy(50)){
+        if((!previousRightMouseButtonPressed && g_RightMouseButtonPressed) && player.inStrategyMode() && player.canBuy(50)){
             player.discountMoney(50);
 
             float translation_x = ((g_LastCursorPosX / (800/2)) - 1) * 8.26;
@@ -270,14 +274,10 @@ int main(int argc, char* argv[]){
             placeMonkey(translation_x, translation_z);
         }
 
-        if(int(monkeys.size()) == 2){
-            monkeys[0].upgradeMonkey();
-        }
-
         for(int i=0; i<int(bloons.size()); i++){
             if(bloons[i].reachedEnd()){
                 player.discountLife(1);
-                bloons.erase(bloons.begin()+i);
+                bloons[i].blow();
             }
         }
 

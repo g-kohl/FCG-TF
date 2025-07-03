@@ -141,12 +141,12 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     }
 
     if(key == GLFW_KEY_F && action == GLFW_PRESS){
-        camera.free = !camera.free;
+        camera.setMode(!camera.getMode());
     }
 
     if(key == GLFW_KEY_C && action == GLFW_PRESS){
         camera.reset(g_CameraTheta, g_CameraPhi, g_CameraDistance);
-        inStrategyMode = true;
+        player.setStrategyMode(true);
     }
 }
 

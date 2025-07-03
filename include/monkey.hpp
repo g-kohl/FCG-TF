@@ -12,14 +12,22 @@
 
 class Monkey{
     public:
-        glm::vec3 translation, scaling, rotation;
-        std::string object_model_name;
-        int object_model_id, level;
+        Monkey(glm::vec3 translation, glm::vec3 rotation, std::string modelName, int modelId);
 
-        Monkey(float t_x,float t_y, float t_z, float s_x, float s_y, float s_z, float r_x, float r_y, float r_z, std::string name, int id);
-        void upgradeMonkey();
+        glm::vec3 getTranslation();
+        glm::vec3 getRotation();
+
+        std::string getModelName();
+
+        int getLevel();
+        void upgrade();
+
+        int getModelId();
 
     private:
+        glm::vec3 translation, rotation;
+        std::string modelName;
+        int modelId, level, targetId;
 };
 
 void placeMonkey(float t_x, float t_z);
