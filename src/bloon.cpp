@@ -65,14 +65,19 @@ std::vector<glm::vec4> points = {
         glm::vec4(-1.2f, 0.0f, 9.5f, 1.0f),
     };
 
-Bloon::Bloon(glm::vec3 translation, std::string modelName, int modelId)
-    : translation(translation), modelName(modelName), modelId(modelId), level(1), time(0), blown(false) {}
+Bloon::Bloon(glm::vec4 translation, std::string modelName, int modelId)
+    : translation(translation), modelName(modelName), modelId(modelId), level(1), time(0), blown(false) {
+
+        SceneObject object = g_VirtualScene[modelName];
+        bbox_max = glm::vec4(object.bbox_max.x, object.bbox_max.y, object.bbox_max.z, 1.0f);
+        bbox_min = glm::vec4(object.bbox_min.x, object.bbox_min.y, object.bbox_min.z, 1.0f);
+    }
 
 bool Bloon::reachedEnd(){
     return translation.z > 6.5;
 }
 
-glm::vec3 Bloon::getTranslation(){
+glm::vec4 Bloon::getTranslation(){
     return translation;
 }
 
@@ -113,8 +118,16 @@ void Bloon::blow(){
     blown = true;
 }
 
+glm::vec4 Bloon::getMaxBbox(){
+    return bbox_max;
+}
+
+glm::vec4 Bloon::getMinBbox(){
+    return bbox_min;
+}
+
 void setupLevel(int level){
-    glm::vec3 translationVector = glm::vec3(-8.0f, 1.0f, -2.0f);
+    glm::vec4 translationVector = glm::vec4(-8.0f, 1.0f, -2.0f, 0.0f);
 
     for(int i=0; i<level; i++){
         Bloon bloon = Bloon(
@@ -130,7 +143,7 @@ void updateBloons(float deltaTime){
         bloons[i].updateTime(deltaTime);
 
         glm::vec4 nextPosition = bezier_spline(points, bloons[i].getTime());
-        glm::vec3 translationVector = bloons[i].getTranslation();
+        glm::vec4 translationVector = bloons[i].getTranslation();
         glm::vec4 bloonPosition = glm::vec4(translationVector.x, translationVector.y, translationVector.z, 0.0f);
         glm::vec4 deltaPosition = nextPosition - bloonPosition;
         

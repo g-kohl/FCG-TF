@@ -1,6 +1,6 @@
 #include "collisions.hpp"
 
-bool point_in_range(glm::vec4 point_p, glm::vec4 point_c, float range){
+bool is_point_in_range(glm::vec4 point_p, glm::vec4 point_c, float range){
 
     glm::vec4 d_vector = point_p - point_c;
     float d_mag = norm(d_vector);

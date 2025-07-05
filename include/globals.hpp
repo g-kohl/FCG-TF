@@ -12,6 +12,7 @@
 #include "monkey.hpp"
 #include "bloon.hpp"
 #include "player.hpp"
+#include "dart.hpp"
 
 // GPU Program
 extern GLuint g_GpuProgramID;
@@ -51,6 +52,9 @@ extern Player player;
 
 // player's monkeys
 extern std::vector<Monkey> monkeys;
+
+// list of darts
+extern std::vector<Dart> darts;
 
 // create camera
 extern Camera camera;

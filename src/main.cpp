@@ -21,7 +21,9 @@
 #include "show_text.hpp"
 #include "monkey.hpp"
 #include "bloon.hpp"
+#include "dart.hpp"
 #include "player.hpp"
+#include "collisions.hpp"
 
 int main(int argc, char* argv[]){
     // initialize glfw
@@ -124,8 +126,14 @@ int main(int argc, char* argv[]){
     float current_time = (float)glfwGetTime();
     float previous_time_camera = current_time;
     float previous_time_bloon = current_time;
+    float previous_time_dart = current_time;
+
     float delta_time_camera;
     float delta_time_bloon;
+    float delta_time_dart;
+
+    // aux var
+    int b_idx, m_idx;
 
     // reset camera
     camera.reset(g_CameraTheta, g_CameraPhi, g_CameraDistance);
@@ -246,7 +254,7 @@ int main(int argc, char* argv[]){
             DrawVirtualObject(bloons[i].getModelName());
         }
 
-        // draw monkeys
+        // iter for monkeys
         for(int i=0; i<int(monkeys.size()); i++){
             glm::vec3 translation = monkeys[i].getTranslation();
             glm::vec3 rotation = monkeys[i].getRotation();
@@ -263,6 +271,53 @@ int main(int argc, char* argv[]){
                 glUniform1i(g_shading_uniform, PHONG);
 
             DrawVirtualObject(monkeys[i].getModelName());
+
+            if(monkeys[i].isReady()){
+                for(int j = 0; j < int(bloons.size()); j++){
+                    if(bloons[j].isBlown())
+                        continue;
+
+                    if(is_point_in_range(bloons[j].getTranslation(), monkeys[i].getTranslation(), monkeys[i].getRange())){
+                        createDart(monkeys[i].getTranslation(), j, i, bloons[j].getTranslation(), monkeys[i].getRange());
+                        monkeys[i].setNotReady();
+                    }
+                }
+            }
+        }
+
+        // get delta_time
+        delta_time_dart = current_time - previous_time_dart;
+        previous_time_dart = current_time;
+
+        // iter for darts
+        for(int i = 0; i < int(darts.size()); i++){            
+            if(darts[i].isAlive()){
+
+                glm::vec4 translation = darts[i].getPosition();
+
+                model = Matrix_Translate(translation.x, translation.y, translation.z);
+
+                glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+                glUniform1i(g_object_id_uniform, 1);
+                glUniform1i(g_shading_uniform, PHONG);
+
+                DrawVirtualObject("bloon");
+
+                darts[i].updateDeltaPos(delta_time_dart);
+
+                b_idx = darts[i].getBloonTargetId();
+                if(is_ray_hit_bbox(bloons[b_idx].getMinBbox(), bloons[b_idx].getMaxBbox(), darts[i].getPosition(), darts[i].getDeltaPos())){
+                    bloons[b_idx].blow();
+                    darts[i].setNotAlive();
+
+                    m_idx = darts[i].getMonkeyId();
+                    monkeys[m_idx].setReady();
+
+                }else darts[i].updatePosition();
+
+                if(!is_point_in_range(darts[i].getPosition(), darts[i].getInitialPosition(), darts[i].getRange()))
+                    darts[i].setNotAlive();
+            }
         }
 
         if((!previousRightMouseButtonPressed && g_RightMouseButtonPressed) && player.inStrategyMode() && player.canBuy(50)){
