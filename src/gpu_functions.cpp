@@ -26,6 +26,7 @@ void LoadShadersFromFiles(){
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_0"), 0);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_1"), 1);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_2"), 2);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_3"), 3);
     glUseProgram(0);
 }
 

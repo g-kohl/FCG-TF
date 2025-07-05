@@ -28,7 +28,7 @@ float Monkey::getRange(){
 
 void Monkey::upgrade(){
     modelName = "monkey_level_2";
-    modelId = 2;
+    modelId = 4;
     level = 2;
 }
 
@@ -52,7 +52,7 @@ void placeMonkey(float t_x, float t_z){
     glm::vec4 translationVector = glm::vec4(t_x, 0.0f, t_z, 0.0f);
     glm::vec4 rotationVector = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
-    Monkey monkey = Monkey(translationVector, rotationVector, "monkey_level_1", 2);
+    Monkey monkey = Monkey(translationVector, rotationVector, "monkey_level_1", 3);
 
     monkeys.push_back(monkey);
 }

@@ -82,24 +82,29 @@ int main(int argc, char* argv[]){
     LoadShadersFromFiles();
 
     // load textures
-    LoadTextureImage("../../data/map.png");
-    LoadTextureImage("../../data/red.png");
-    LoadTextureImage("../../data/brown.png");
+    LoadTextureImage("../../data/textures/map.png");
+    LoadTextureImage("../../data/textures/red.png");
+    LoadTextureImage("../../data/textures/brown.png");
+    LoadTextureImage("../../data/textures/metal.jpg");
 
     // create object models
-    ObjectModel bloonModel("../../data/bloon.obj");
-    bloonModel.ComputeNormals();
-    bloonModel.BuildTrianglesAndAddToVirtualScene();
-
-    ObjectModel planeModel("../../data/plane.obj");
+    ObjectModel planeModel("../../data/models/plane.obj");
     planeModel.ComputeNormals();
     planeModel.BuildTrianglesAndAddToVirtualScene();
 
-    ObjectModel monkeyLevel1Model("../../data/monkey_level_1.obj");
+    ObjectModel bloonModel("../../data/models/bloon.obj");
+    bloonModel.ComputeNormals();
+    bloonModel.BuildTrianglesAndAddToVirtualScene();
+
+    ObjectModel dartModel("../../data/models/dart.obj");
+    dartModel.ComputeNormals();
+    dartModel.BuildTrianglesAndAddToVirtualScene();
+
+    ObjectModel monkeyLevel1Model("../../data/models/monkey_level_1.obj");
     monkeyLevel1Model.ComputeNormals();
     monkeyLevel1Model.BuildTrianglesAndAddToVirtualScene();
 
-    ObjectModel monkeyLevel2Model("../../data/monkey_level_2.obj");
+    ObjectModel monkeyLevel2Model("../../data/models/monkey_level_2.obj");
     monkeyLevel2Model.ComputeNormals();
     monkeyLevel2Model.BuildTrianglesAndAddToVirtualScene();
 
@@ -216,8 +221,9 @@ int main(int argc, char* argv[]){
         // draw objects
         #define PLANE 0
         #define BLOON 1
-        #define MONKEY_LEVEL_1 2
-        #define MONKEY_LEVEL_2 3
+        #define DART 2
+        #define MONKEY_LEVEL_1 3
+        #define MONKEY_LEVEL_2 4
 
         // shading model
         #define PHONG 0
@@ -298,15 +304,22 @@ int main(int argc, char* argv[]){
                 model = Matrix_Translate(translation.x, translation.y, translation.z);
 
                 glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-                glUniform1i(g_object_id_uniform, 1);
+                glUniform1i(g_object_id_uniform, 2);
                 glUniform1i(g_shading_uniform, PHONG);
 
-                DrawVirtualObject("bloon");
+                DrawVirtualObject("dart");
 
                 darts[i].updateDeltaPos(delta_time_dart);
 
                 b_idx = darts[i].getBloonTargetId();
-                if(is_ray_hit_bbox(bloons[b_idx].getMinBbox(), bloons[b_idx].getMaxBbox(), darts[i].getPosition(), darts[i].getDeltaPos())){
+                
+                glm::vec4 vec_t = bloons[b_idx].getTranslation();
+                glm::mat4 mat_t = Matrix_Identity() * Matrix_Translate(vec_t.x, vec_t.y, vec_t.z);
+
+                glm::vec4 bbox_t_max = mat_t * bloons[b_idx].getMaxBbox();
+                glm::vec4 bbox_t_min = mat_t * bloons[b_idx].getMinBbox();
+
+                if(is_ray_hit_bbox(bbox_t_min, bbox_t_max, darts[i].getPosition(), darts[i].getDeltaPos())){
                     bloons[b_idx].blow();
                     darts[i].setNotAlive();
 
