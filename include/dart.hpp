@@ -7,6 +7,9 @@
 // GLM headers
 #include <glm/vec4.hpp>
 
+// Local headers
+#include "matrices.h"
+
 class Dart{
     public:
         Dart(glm::vec4 initialPosition, int bloonTargetId, int monkeyId, glm::vec4 bloonTargetPos, float range);
@@ -23,14 +26,17 @@ class Dart{
         void updatePosition();
         void updateDeltaPos(float deltaTime);
 
+        float getRotation();
+        void setRotation();
+
         bool isAlive();
         void setNotAlive();
 
     private:
-        glm::vec4 initialPosition, position, velocity, deltaPos;
+        glm::vec4 initialPosition, position, velocity, deltaPos, bloonTargetPos;
         std::string modelName = "dart";
         int bloonTargetId, monkeyId;
-        float range;
+        float range, rotation;
         bool alive;
 };
 

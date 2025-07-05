@@ -263,10 +263,10 @@ int main(int argc, char* argv[]){
         // iter for monkeys
         for(int i=0; i<int(monkeys.size()); i++){
             glm::vec3 translation = monkeys[i].getTranslation();
-            glm::vec3 rotation = monkeys[i].getRotation();
+            float rotation = monkeys[i].getRotation();
 
             model = Matrix_Translate(translation.x, translation.y, translation.z)
-                * Matrix_Rotate_X(rotation.x) * Matrix_Rotate_Y(rotation.y) * Matrix_Rotate_Z(rotation.z);
+                * Matrix_Rotate_Y(rotation);
 
             glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
             glUniform1i(g_object_id_uniform, monkeys[i].getModelId());
@@ -278,17 +278,20 @@ int main(int argc, char* argv[]){
 
             DrawVirtualObject(monkeys[i].getModelName());
 
-            if(monkeys[i].isReady()){
-                for(int j = 0; j < int(bloons.size()); j++){
-                    if(bloons[j].isBlown())
-                        continue;
+            for(int j = 0; j < int(bloons.size()); j++){
+                if(bloons[j].isBlown())
+                    continue;
 
-                    if(is_point_in_range(bloons[j].getTranslation(), monkeys[i].getTranslation(), monkeys[i].getRange())){
+                if(is_point_in_range(bloons[j].getTranslation(), monkeys[i].getTranslation(), monkeys[i].getRange())){
+                    monkeys[i].lookToBloon(bloons[j].getTranslation());
+                    
+                    if(monkeys[i].isReady()){
                         createDart(monkeys[i].getTranslation(), j, i, bloons[j].getTranslation(), monkeys[i].getRange());
                         monkeys[i].setNotReady();
                     }
+
                 }
-            }
+            }            
         }
 
         // get delta_time
@@ -301,7 +304,11 @@ int main(int argc, char* argv[]){
 
                 glm::vec4 translation = darts[i].getPosition();
 
-                model = Matrix_Translate(translation.x, translation.y, translation.z);
+                darts[i].setRotation();
+                float rotation = darts[i].getRotation();
+
+                model = Matrix_Translate(translation.x, translation.y, translation.z)
+                    * Matrix_Rotate_Y(rotation);
 
                 glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
                 glUniform1i(g_object_id_uniform, 2);
@@ -312,7 +319,7 @@ int main(int argc, char* argv[]){
                 darts[i].updateDeltaPos(delta_time_dart);
 
                 b_idx = darts[i].getBloonTargetId();
-                
+
                 glm::vec4 vec_t = bloons[b_idx].getTranslation();
                 glm::mat4 mat_t = Matrix_Identity() * Matrix_Translate(vec_t.x, vec_t.y, vec_t.z);
 
