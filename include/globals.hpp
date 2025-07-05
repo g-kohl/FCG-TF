@@ -14,6 +14,19 @@
 #include "player.hpp"
 #include "dart.hpp"
 
+// Constants
+#define SCREEN_WIDTH 826
+#define SCREEN_HEIGHT 532
+
+#define PLANE 0
+#define BLOON 1
+#define DART 2
+#define MONKEY_LEVEL_1 3
+#define MONKEY_LEVEL_2 4
+
+#define PHONG 0
+#define GOURAUD 1
+
 // GPU Program
 extern GLuint g_GpuProgramID;
 extern GLint g_model_uniform;

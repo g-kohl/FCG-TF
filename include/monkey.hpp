@@ -42,4 +42,5 @@ class Monkey{
         bool ready; // if the monkey is able to shoot
 };
 
+bool monkeyPositionValid(float t_x, float t_z);
 void placeMonkey(float t_x, float t_z);

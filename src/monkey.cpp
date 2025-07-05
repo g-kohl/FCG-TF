@@ -61,6 +61,46 @@ void Monkey::setNotReady(){
     ready = false;
 }
 
+bool monkeyPositionValid(float t_x, float t_z){
+    if(t_x >= -10.5 && t_x <= 1.0 && t_z >= -2.0 && t_z <= 0.0)
+        return false;
+
+    if(t_x >= -1.0 && t_x <= 1.0 && t_z >= -5.0 && t_z <= 0.0)
+        return false;
+
+    if(t_x >= -4.5 && t_x <= 1.0 && t_z >= -5.0 && t_z <= -3.0)
+        return false;
+
+    if(t_x >= -4.5 && t_x <= -2.5 && t_z >= -5.0 && t_z <= 5.0)
+        return false;
+
+    if(t_x >= -8.0 && t_x <= -2.5 && t_z >= 3.0 && t_z <= 5.0)
+        return false;
+
+    if(t_x >= -8.0 && t_x <= -6.0 && t_z >= 0.0 && t_z <= 5.0)
+        return false;
+
+    if(t_x >= -8.0 && t_x <= 4.0 && t_z >= 0.0 && t_z <= 2.0)
+        return false;
+
+    if(t_x >= 1.5 && t_x <= 4.0 && t_z >= -3.0 && t_z <= 2.0)
+        return false;
+
+    if(t_x >= 2.0 && t_x <= 6.0 && t_z >= -3.0 && t_z <= -1.0)
+        return false;
+
+    if(t_x >= 4.0 && t_x <= 6.0 && t_z >= -3.0 && t_z <= 4.0)
+        return false;
+
+    if(t_x >= -2.0 && t_x <= 6.0 && t_z >= 2.0 && t_z <= 4.0)
+        return false;
+
+    if(t_x >= -2.0 && t_x <= 0.0 && t_z >= 2.0 && t_z <= 7.0)
+        return false;
+
+    return true;
+}
+
 void placeMonkey(float t_x, float t_z){
     glm::vec4 translationVector = glm::vec4(t_x, 0.0f, t_z, 0.0f);
 
