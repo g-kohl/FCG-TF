@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
 
     // create window
     GLFWwindow* window;
-    window = glfwCreateWindow(800, 600, "Bloons 3D", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Bloons 3D", NULL, NULL);
 
     if(!window){
         glfwTerminate();
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]){
 
     // define framebuffer callback
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-    FramebufferSizeCallback(window, 800, 600);
+    FramebufferSizeCallback(window, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     // print GPU informations
     const GLubyte *vendor      = glGetString(GL_VENDOR);
@@ -144,7 +144,7 @@ int main(int argc, char* argv[]){
     camera.reset(g_CameraTheta, g_CameraPhi, g_CameraDistance);
 
     // setup first level
-    setupLevel(1);
+    setupRound(1);
 
     // render window
     while(!glfwWindowShouldClose(window)){
@@ -218,19 +218,8 @@ int main(int argc, char* argv[]){
         // create model matrix
         glm::mat4 model = Matrix_Identity();
 
-        // draw objects
-        #define PLANE 0
-        #define BLOON 1
-        #define DART 2
-        #define MONKEY_LEVEL_1 3
-        #define MONKEY_LEVEL_2 4
-
-        // shading model
-        #define PHONG 0
-        #define GOURAUD 1
-
         // draw plane
-        model = Matrix_Scale(10.0f,1.0f,6.44f);
+        model = Matrix_Scale(10.0f, 1.0f, 6.44f);
 
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, PLANE);
@@ -246,7 +235,7 @@ int main(int argc, char* argv[]){
 
         // draw bloons
         for(int i=0; i<int(bloons.size()); i++){
-            if(bloons[i].isBlown())
+            if(bloons[i].isBlown() || !bloons[i].isReady())
                 continue;
                 
             glm::vec3 translation = bloons[i].getTranslation();
@@ -289,6 +278,7 @@ int main(int argc, char* argv[]){
                         monkeys[i].setNotReady();
                     }
 
+                    break;
                 }
             }            
         }
@@ -344,11 +334,16 @@ int main(int argc, char* argv[]){
         }
 
         if((!previousRightMouseButtonPressed && g_RightMouseButtonPressed) && player.inStrategyMode() && player.canBuy(50)){
-            float translation_x = ((g_LastCursorPosX / (800/2)) - 1) * 8.26;
-            float translation_z = ((g_LastCursorPosY / (600/2)) - 1) * 6.44;
 
-            if(placeMonkey(translation_x, translation_z))
-                player.discountMoney(50);
+            float translation_x = ((g_LastCursorPosX / (SCREEN_WIDTH/2)) - 1) * 10.0;
+            float translation_z = ((g_LastCursorPosY / (SCREEN_HEIGHT/2)) - 1) * 6.44;
+
+            // printf("%f %f\n", translation_x, translation_z);
+
+            if(monkeyPositionValid(translation_x, translation_z)){
+                if(placeMonkey(translation_x, translation_z))
+                    player.discountMoney(50);
+            }
         }
 
         for(int i=0; i<int(bloons.size()); i++){

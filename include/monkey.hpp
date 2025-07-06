@@ -51,3 +51,4 @@ class Monkey{
 };
 
 bool placeMonkey(float t_x, float t_z);
+bool monkeyPositionValid(float t_x, float t_z);

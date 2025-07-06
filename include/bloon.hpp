@@ -9,12 +9,14 @@
 // Local Headers
 #include "player.hpp"
 #include "animation_functions.hpp"
-
 #include "scene_object.hpp"
+
+// Constants
+#define MAX_LEVEL 1
 
 class Bloon{
     public:
-        Bloon(glm::vec4 translation, std::string modelName, int modelId);
+        Bloon(glm::vec4 translation, std::string modelName, int modelId, int level, float time);
 
         bool reachedEnd();
 
@@ -34,6 +36,9 @@ class Bloon{
         void resetTime();
         void updateTime(float deltaTime);
 
+        bool isReady();
+        void setReady();
+
         bool isBlown();
         void blow();
 
@@ -43,9 +48,9 @@ class Bloon{
         std::string modelName;
         int modelId, level;
         float time;
-        bool blown;
+        bool ready, blown;
 };
 
-void setupLevel(int level);
+void setupRound(int level);
 
 void updateBloons(float deltaTime);
