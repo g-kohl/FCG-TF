@@ -12,7 +12,7 @@
 
 class Dart{
     public:
-        Dart(glm::vec4 initialPosition, int bloonTargetId, int monkeyId, glm::vec4 bloonTargetPos, float range);
+        Dart(glm::vec4 initialPosition, glm::vec4 bloonTargetPos, int bloonTargetId, int monkeyId, float range);
 
         glm::vec4 getPosition();
         glm::vec4 getInitialPosition();
@@ -40,4 +40,4 @@ class Dart{
         bool alive;
 };
 
-void createDart(glm::vec4 monkeyPos, int b_id, int m_id, glm::vec4 bloonPos, float range);
+void createDart(glm::vec4 monkeyPos, glm::vec4 bloonPos, int b_id, int m_id, float range);

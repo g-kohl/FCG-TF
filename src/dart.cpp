@@ -2,7 +2,7 @@
 
 std::vector<Dart> darts;
 
-Dart::Dart(glm::vec4 initialPosition, int bloonTargetId, int monkeyId, glm::vec4 bloonTargetPos, float range)
+Dart::Dart(glm::vec4 initialPosition, glm::vec4 bloonTargetPos, int bloonTargetId, int monkeyId, float range)
     : initialPosition(initialPosition), position(initialPosition), bloonTargetPos(bloonTargetPos), bloonTargetId(bloonTargetId), monkeyId(monkeyId), range(range), alive(true) {
 
         glm::vec4 v_dir = bloonTargetPos - initialPosition;
@@ -66,7 +66,7 @@ void Dart::setRotation(){
     rotation = atan2(direction.x, direction.z) + 3.141592;
 }
 
-void createDart(glm::vec4 monkeyPos, int b_id, int m_id, glm::vec4 bloonPos, float range){
-    Dart new_dart = Dart(monkeyPos, b_id, m_id, bloonPos, range);
+void createDart(glm::vec4 monkeyPos, glm::vec4 bloonPos, int b_id, int m_id, float range){
+    Dart new_dart = Dart(monkeyPos, bloonPos, b_id, m_id, range);
     darts.push_back(new_dart);
 }
