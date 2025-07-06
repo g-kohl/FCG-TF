@@ -84,7 +84,7 @@ int main(int argc, char* argv[]){
     // load textures
     LoadTextureImage("../../data/textures/map.png");
     LoadTextureImage("../../data/textures/red.png");
-    LoadTextureImage("../../data/textures/brown.png");
+    LoadTextureImage("../../data/textures/monkey.png");
     LoadTextureImage("../../data/textures/metal.jpg");
 
     // create object models
