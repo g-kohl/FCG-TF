@@ -36,28 +36,54 @@ glm::vec4 Camera::getUpVector(){
     return upVector;
 }
 
-void Camera::move(char direction, float delta_time){
+void Camera::move(char direction, float delta_time, std::vector<Monkey> monkeys){
     if(!free)
         return;
 
+    glm::vec4 nextPos; 
+
     switch(direction) {
         case 'F':
-            position += -wVector * speed * delta_time;
+            nextPos = position + (-wVector * speed * delta_time);
+            if(!checkBboxCollisions(nextPos, monkeys)){
+                if(nextPos.y >= 0.5f)
+                    position = nextPos;
+            }
+
             break;
         case 'L':
-            position += -uVector * speed * delta_time;
+            nextPos = position + (-uVector * speed * delta_time);
+            if(!checkBboxCollisions(nextPos, monkeys))
+                position = nextPos;
+
             break;
         case 'B':
-            position += wVector * speed * delta_time;
+            nextPos = position + (wVector * speed * delta_time);
+            if(!checkBboxCollisions(nextPos, monkeys)){
+                if(nextPos.y >= 0.5f)
+                    position = nextPos;
+            }
+
             break;
         case 'R':
-            position += uVector * speed * delta_time;
+            nextPos = position + (uVector * speed * delta_time);
+            if(!checkBboxCollisions(nextPos, monkeys))
+                position = nextPos;
+
             break;
         case 'U':
-            position += upVector * speed * delta_time;
+            nextPos = position + (upVector * speed * delta_time);
+            if(!checkBboxCollisions(nextPos, monkeys))
+                position = nextPos;
+
             break;
         case 'D':
-            position += -upVector * speed * delta_time;
+            nextPos = position + (-upVector * speed * delta_time);
+            if(!checkBboxCollisions(nextPos, monkeys)){
+                if(nextPos.y >= 0.5f)
+                    position = nextPos;
+            }
+
             break;
         default:
             break;
@@ -97,4 +123,14 @@ void Camera::computeVectors(){
     wVector /= norm(wVector);
     uVector = crossproduct(upVector, wVector);
     uVector /= norm(uVector);
+}
+
+bool Camera::checkBboxCollisions(glm::vec4 nextPos, std::vector<Monkey> monkeys){
+
+    for(int j = 0; j < int(monkeys.size()); j++){        
+        if(is_sphere_hit_bbox(monkeys[j].getMinBbox(), monkeys[j].getMaxBbox(), nextPos, 0.1f))
+            return true;
+    }
+
+    return false;
 }

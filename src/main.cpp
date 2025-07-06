@@ -167,22 +167,22 @@ int main(int argc, char* argv[]){
 
         // check camera control keys
         if(W_pressed)
-            camera.move('F', delta_time_camera); // front
+            camera.move('F', delta_time_camera, monkeys); // front
 
         if(A_pressed)
-            camera.move('L', delta_time_camera); // left
+            camera.move('L', delta_time_camera, monkeys); // left
 
         if(S_pressed)
-            camera.move('B', delta_time_camera); // back
+            camera.move('B', delta_time_camera, monkeys); // back
 
         if(D_pressed)
-            camera.move('R', delta_time_camera); // right
+            camera.move('R', delta_time_camera, monkeys); // right
 
         if(SPACE_pressed)
-            camera.move('U', delta_time_camera); // up
+            camera.move('U', delta_time_camera, monkeys); // up
 
         if(SHIFT_pressed)
-            camera.move('D', delta_time_camera); // down
+            camera.move('D', delta_time_camera, monkeys); // down
 
         if(B_pressed){
             bloons[0].resetTime();
@@ -250,7 +250,6 @@ int main(int argc, char* argv[]){
                 continue;
                 
             glm::vec3 translation = bloons[i].getTranslation();
-
             model = Matrix_Translate(translation.x, translation.y, translation.z);
 
             glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
@@ -286,7 +285,7 @@ int main(int argc, char* argv[]){
                     monkeys[i].lookToBloon(bloons[j].getTranslation());
                     
                     if(monkeys[i].isReady()){
-                        createDart(monkeys[i].getTranslation(), j, i, bloons[j].getTranslation(), monkeys[i].getRange());
+                        createDart(monkeys[i].getTranslation(), bloons[j].getTranslation(), j, i, monkeys[i].getRange());
                         monkeys[i].setNotReady();
                     }
 
@@ -318,6 +317,7 @@ int main(int argc, char* argv[]){
 
                 darts[i].updateDeltaPos(delta_time_dart);
 
+                m_idx = darts[i].getMonkeyId();
                 b_idx = darts[i].getBloonTargetId();
 
                 glm::vec4 vec_t = bloons[b_idx].getTranslation();
@@ -329,24 +329,26 @@ int main(int argc, char* argv[]){
                 if(is_ray_hit_bbox(bbox_t_min, bbox_t_max, darts[i].getPosition(), darts[i].getDeltaPos())){
                     bloons[b_idx].blow();
                     darts[i].setNotAlive();
-
-                    m_idx = darts[i].getMonkeyId();
                     monkeys[m_idx].setReady();
 
-                }else darts[i].updatePosition();
+                }else{ 
 
-                if(!is_point_in_range(darts[i].getPosition(), darts[i].getInitialPosition(), darts[i].getRange()))
-                    darts[i].setNotAlive();
+                    darts[i].updatePosition();
+
+                    if(!is_point_in_range(darts[i].getPosition(), darts[i].getInitialPosition(), darts[i].getRange())){
+                        darts[i].setNotAlive();
+                        monkeys[m_idx].setReady();
+                    }
+                }
             }
         }
 
         if((!previousRightMouseButtonPressed && g_RightMouseButtonPressed) && player.inStrategyMode() && player.canBuy(50)){
-            player.discountMoney(50);
-
             float translation_x = ((g_LastCursorPosX / (800/2)) - 1) * 8.26;
             float translation_z = ((g_LastCursorPosY / (600/2)) - 1) * 6.44;
 
-            placeMonkey(translation_x, translation_z);
+            if(placeMonkey(translation_x, translation_z))
+                player.discountMoney(50);
         }
 
         for(int i=0; i<int(bloons.size()); i++){

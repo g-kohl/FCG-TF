@@ -41,3 +41,29 @@ bool is_ray_hit_bbox(glm::vec4 b_min, glm::vec4 b_max, glm::vec4 point_c, glm::v
 
     }else return t_close <= ray_mag;
 }
+
+bool is_sphere_hit_bbox(glm::vec4 min_bbox, glm::vec4 max_bbox, glm::vec4 point_c, float sphere_r){
+
+    glm::vec4 p_close = glm::vec4(point_c.x, point_c.y, point_c.z, 1.0f);
+
+    for(int i = 0; i < 3; i++){
+
+        if(point_c[i] < min_bbox[i]){
+            p_close[i] = min_bbox[i];            
+
+        }else if(point_c[i] > max_bbox[i]) 
+            p_close[i] = max_bbox[i];
+    }
+
+    return is_point_in_range(p_close, point_c, sphere_r);
+}
+
+bool is_bbox_hit_bbox(glm::vec4 min_bbox_fir, glm::vec4 max_bbox_fir, glm::vec4 min_bbox_sec, glm::vec4 max_bbox_sec){
+
+    if(min_bbox_sec.x <= max_bbox_fir.x && max_bbox_sec.x >= min_bbox_fir.x){
+        if(min_bbox_sec.z <= max_bbox_fir.z && max_bbox_sec.z >= min_bbox_fir.z)
+            return true;
+    }
+
+    return false;
+}
