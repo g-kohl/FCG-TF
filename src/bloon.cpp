@@ -3,67 +3,76 @@
 std::vector<Bloon> bloons;
 
 std::vector<glm::vec4> points = {
-        glm::vec4(-9.2f, 0.0f, -1.6f, 1.0f),  
-        glm::vec4(-6.8f, 0.0f, -1.6f, 1.0f),
-        glm::vec4(-4.4f, 0.0f, -1.6f, 1.0f),
+    glm::vec4(-9.2f, 0.0f, -1.0f, 1.0f),  
+    glm::vec4(-8.0f, 0.0f, -1.0f, 1.0f),
+    glm::vec4(-6.8f, 0.0f, -1.0f, 1.0f),
 
-        glm::vec4(-2.0f, 0.0f, -1.6f, 1.0f),
-        glm::vec4(0.0f, 0.0f, -1.6f, 1.0f),
-        glm::vec4(-0.05f, 0.0f, -3.0f, 1.0f),
+    glm::vec4(-5.6f, 0.0f, -1.0f, 1.0f),  
+    glm::vec4(-4.4f, 0.0f, -1.0f, 1.0f),
+    glm::vec4(-3.2f, 0.0f, -1.0f, 1.0f),
 
-        glm::vec4(-0.05f, 0.0f, -4.0f, 1.0f),
-        glm::vec4(-0.05f, 0.0f, -5.0f, 1.0f),
-        glm::vec4(-0.8f, 0.0f, -6.3f, 1.0f),
+    glm::vec4(-2.0f, 0.0f, -1.0f, 1.0f),
+    glm::vec4(-1.0f, 0.0f, -1.0f, 1.0f),
+    glm::vec4(-0.05, 0.0f, -1.5f, 1.0f),
 
-        glm::vec4(-1.8f, 0.0f, -6.3f, 1.0f),
-        glm::vec4(-2.8f, 0.0f, -6.3f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, -5.2f, 1.0f),
+    glm::vec4(-0.05f, 0.0f, -2.5f, 1.0f),
+    glm::vec4(-0.05f, 0.0f, -3.5f, 1.0f),
+    glm::vec4(-0.8f, 0.0f, -4.0f, 1.0f),
 
-        glm::vec4(-3.5f, 0.0f, -4.2f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, -2.8f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, -1.4f, 1.0f),
+    glm::vec4(-1.8f, 0.0f, -4.0f, 1.0f),
+    glm::vec4(-2.8f, 0.0f, -4.0f, 1.0f),
+    glm::vec4(-3.4f, 0.0f, -3.8f, 1.0f),
 
-        glm::vec4(-3.5f, 0.0f, 0.0f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, 1.3f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, 2.6f, 1.0f),
+    glm::vec4(-3.4f, 0.0f, -2.8f, 1.0f),
+    glm::vec4(-3.4f, 0.0f, -1.87f, 1.0f),
+	glm::vec4(-3.4f, 0.0f, -0.93f, 1.0f),
 
-        glm::vec4(-3.5f, 0.0f, 3.9f, 1.0f),
-        glm::vec4(-3.5f, 0.0f, 4.9f, 1.0f),
-        glm::vec4(-4.1f, 0.0f, 6.1f, 1.0f),
+    glm::vec4(-3.4f, 0.0f, 0.0f, 1.0f), 
+	glm::vec4(-3.4f, 0.0f, 0.83f, 1.0f),
+    glm::vec4(-3.4f, 0.0f, 1.67f, 1.0f),
 
-        glm::vec4(-5.1f, 0.0f, 6.1f, 1.0f),
-        glm::vec4(-6.1f, 0.0f, 6.1f, 1.0f),
-        glm::vec4(-6.8f, 0.0f, 4.9f, 1.0f),
+    glm::vec4(-3.4f, 0.0f, 2.5f, 1.0f),
+    glm::vec4(-3.4f, 0.0f, 3.5f, 1.0f),
+ 	glm::vec4(-4.2f, 0.0f, 4.0f, 1.0f),
 
-        glm::vec4(-6.8f, 0.0f, 3.9f, 1.0f),
-        glm::vec4(-6.8f, 0.0f, 2.9f, 1.0f),
-        glm::vec4(-5.7f, 0.0f, 1.5f, 1.0f),
+    glm::vec4(-5.2f, 0.0f, 4.0f, 1.0f),
+    glm::vec4(-6.2f, 0.0f, 4.0f, 1.0f),
+    glm::vec4(-6.8f, 0.0f, 3.5f, 1.0f),
 
-        glm::vec4(-4.7f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(-2.97f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(-1.24f, 0.0f, 1.5f, 1.0f),
+    glm::vec4(-6.8f, 0.0f, 2.5f, 1.0f), 
+    glm::vec4(-6.8f, 0.0f, 1.5f, 1.0f),
+	glm::vec4(-5.7f, 0.0f, 1.0f, 1.0f),
 
-        glm::vec4(0.5f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(1.5f, 0.0f, 1.5f, 1.0f),
-        glm::vec4(2.8f, 0.0f, -0.3f, 1.0f),
+    glm::vec4(-4.7f, 0.0f, 1.0f, 1.0f),
+    glm::vec4(-3.83f, 0.0f, 1.0f, 1.0f),
+    glm::vec4(-2.96f, 0.0f, 1.0f, 1.0f),
 
-        glm::vec4(2.8f, 0.0f, -1.3f, 1.0f),
-        glm::vec4(2.8f, 0.0f, -3.3f, 1.0f),
-        glm::vec4(5.0f, 0.0f, -3.3f, 1.0f),
+    glm::vec4(-2.1f, 0.0f, 1.0f, 1.0f),
+    glm::vec4(-1.23f, 0.0f, 1.0f, 1.0f),
+    glm::vec4(-0.36f, 0.0f, 1.0f, 1.0f),
 
-        glm::vec4(5.0f, 0.0f, -1.3f, 1.0f),
-        glm::vec4(5.0f, 0.0f, 0.14f, 1.0f),
-        glm::vec4(5.0f, 0.0f, 1.57f, 1.0f),
+    glm::vec4(0.5f, 0.0f, 1.0f, 1.0f), 
+    glm::vec4(1.5f, 0.0f, 1.0f, 1.0f),
+	glm::vec4(2.8f, 0.0f, 0.0f, 1.0f),
 
-        glm::vec4(5.0f, 0.0f, 3.0f, 1.0f),
-        glm::vec4(5.0f, 0.0f, 3.83f, 1.0f),
-        glm::vec4(2.8f, 0.0f, 4.5f, 1.0f),
+    glm::vec4(2.8f, 0.0f, -1.0f, 1.0f), 
+    glm::vec4(2.8f, 0.0f, -2.0f, 1.0f),
+	glm::vec4(5.0f, 0.0f, -2.0f, 1.0f),
 
-        glm::vec4(0.1f, 0.0f, 4.5f, 1.0f),
-        glm::vec4(-1.1f, 0.0f, 4.5f, 1.0f),
-        glm::vec4(-1.2f, 0.0f, 8.5f, 1.0f),
-        glm::vec4(-1.2f, 0.0f, 9.5f, 1.0f),
-    };
+    glm::vec4(5.0f, 0.0f, -1.0f, 1.0f), 
+	glm::vec4(5.0f, 0.0f, 0.0f, 1.0f),
+	glm::vec4(5.0f, 0.0f, 1.0f, 1.0f),
+
+    glm::vec4(5.0f, 0.0f, 2.0f, 1.0f),
+    glm::vec4(5.0f, 0.0f, 3.0f, 1.0f),
+	glm::vec4(2.0f, 0.0f, 3.0f, 1.0f),
+
+    glm::vec4(1.0f, 0.0f, 3.0f, 1.0f),
+    glm::vec4(0.0f, 0.0f, 3.0f, 1.0f),
+    glm::vec4(-1.2f, 0.0f, 2.5f, 1.0f),
+    glm::vec4(-1.2f, 0.0f, 6.5f, 1.0f),
+};
+
 
 Bloon::Bloon(glm::vec4 translation, std::string modelName, int modelId, int level, float time)
     : translation(translation), modelName(modelName), modelId(modelId), level(level), time(time), ready(false), blown(false) {
@@ -74,7 +83,7 @@ Bloon::Bloon(glm::vec4 translation, std::string modelName, int modelId, int leve
     }
 
 bool Bloon::reachedEnd(){
-    return translation.z > 6.5;
+    return translation.z > 6.0f;
 }
 
 glm::vec4 Bloon::getTranslation(){
