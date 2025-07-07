@@ -23,6 +23,10 @@
 #define DART 2
 #define MONKEY_LEVEL_1 3
 #define MONKEY_LEVEL_2 4
+#define WALL_FRONT 5
+#define WALL_RIGHT 6
+#define WALL_BACK 7
+#define WALL_LEFT 8
 
 #define PHONG 0
 #define GOURAUD 1
@@ -36,6 +40,7 @@ extern GLint g_object_id_uniform;
 extern GLint g_shading_uniform;
 extern GLint g_bbox_min_uniform;
 extern GLint g_bbox_max_uniform;
+extern GLint g_bloon_level;
 
 // screen ratio
 extern float g_ScreenRatio;

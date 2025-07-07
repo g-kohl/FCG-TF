@@ -1,7 +1,9 @@
 #include "bloon.hpp"
 
+// list of bloons
 std::vector<Bloon> bloons;
 
+// control points
 std::vector<glm::vec4> points = {
         glm::vec4(-9.2f, 0.0f, -1.6f, 1.0f),  
         glm::vec4(-6.8f, 0.0f, -1.6f, 1.0f),
@@ -65,6 +67,7 @@ std::vector<glm::vec4> points = {
         glm::vec4(-1.2f, 0.0f, 9.5f, 1.0f),
     };
 
+// constructor
 Bloon::Bloon(glm::vec4 translation, std::string modelName, int modelId, int level, float time)
     : translation(translation), modelName(modelName), modelId(modelId), level(level), time(time), ready(false), blown(false) {
 
@@ -73,12 +76,14 @@ Bloon::Bloon(glm::vec4 translation, std::string modelName, int modelId, int leve
         bbox_min = glm::vec4(object.bbox_min.x, object.bbox_min.y, object.bbox_min.z, 1.0f);
     }
 
-bool Bloon::reachedEnd(){
-    return translation.z > 6.5;
-}
+// translation
 
 glm::vec4 Bloon::getTranslation(){
     return translation;
+}
+
+bool Bloon::reachedEnd(){
+    return translation.z > MAX_MAP_HEIGHT;
 }
 
 void Bloon::setTranslation(glm::vec4 deltaPosition){
@@ -86,45 +91,23 @@ void Bloon::setTranslation(glm::vec4 deltaPosition){
     translation.z += deltaPosition.z;
 }
 
-std::string Bloon::getModelName(){
-    return modelName;
+void Bloon::updateTranslation(float deltaTime){
+    updateTime(deltaTime);
+
+    if(getTime() >= 0)
+        setReady();
+
+    if(isReady()){
+        glm::vec4 nextPosition = bezierSpline(points, getTime());
+        glm::vec4 translationVector = getTranslation();
+        glm::vec4 bloonPosition = glm::vec4(translationVector.x, translationVector.y, translationVector.z, 0.0f);
+        glm::vec4 deltaPosition = nextPosition - bloonPosition;
+        
+        setTranslation(deltaPosition);
+    }
 }
 
-int Bloon::getLevel(){
-    return level;
-}
-
-int Bloon::getModelId(){
-    return modelId;
-}
-
-float Bloon::getTime(){
-    return time;
-}
-
-void Bloon::resetTime(){
-    time = 0;
-}
-
-void Bloon::updateTime(float deltaTime){
-    time += deltaTime;
-}
-
-bool Bloon::isReady(){
-    return ready;
-}
-
-void Bloon::setReady(){
-    ready = true;
-}
-
-bool Bloon::isBlown(){
-    return blown;
-}
-
-void Bloon::blow(){
-    blown = true;
-}
+// bounding box
 
 glm::vec4 Bloon::getMaxBbox(){
     return bbox_max;
@@ -134,8 +117,68 @@ glm::vec4 Bloon::getMinBbox(){
     return bbox_min;
 }
 
+// model name
+
+std::string Bloon::getModelName(){
+    return modelName;
+}
+
+// model id
+
+int Bloon::getModelId(){
+    return modelId;
+}
+
+// level
+
+int Bloon::getLevel(){
+    return level;
+}
+
+void Bloon::loseLevel(int damage){
+    level -= damage;
+
+    if(level <= 0)
+        blow();
+}
+
+// time
+
+float Bloon::getTime(){
+    return time;
+}
+
+void Bloon::updateTime(float deltaTime){
+    time += deltaTime;
+}
+
+void Bloon::resetTime(){
+    time = 0.0f;
+}
+
+// ready
+
+bool Bloon::isReady(){
+    return ready;
+}
+
+void Bloon::setReady(){
+    ready = true;
+}
+
+// blown
+
+bool Bloon::isBlown(){
+    return blown;
+}
+
+void Bloon::blow(){
+    blown = true;
+}
+
 void setupRound(int round){
-    glm::vec4 translationVector = glm::vec4(-8.0f, 1.0f, -2.0f, 0.0f);
+    bloons.clear();
+    glm::vec4 translationVector = INITIAL_POSITION;
 
     for(int i=0; i<round*5; i++){
         int level = floor(i/5) + 1;
@@ -143,26 +186,17 @@ void setupRound(int round){
 
         Bloon bloon = Bloon(
         translationVector,
-        "bloon", 1, level, -1.0*(i+5));
+        "bloon", BLOON_MODEL_ID, level, -1.0*(i+5));
 
         bloons.push_back(bloon);
     }
 }
 
-void updateBloons(float deltaTime){
+bool roundFinished(){
     for(int i=0; i<int(bloons.size()); i++){
-        bloons[i].updateTime(deltaTime);
-
-        if(bloons[i].getTime() >= 0)
-            bloons[i].setReady();
-
-        if(bloons[i].isReady()){
-            glm::vec4 nextPosition = bezier_spline(points, bloons[i].getTime());
-            glm::vec4 translationVector = bloons[i].getTranslation();
-            glm::vec4 bloonPosition = glm::vec4(translationVector.x, translationVector.y, translationVector.z, 0.0f);
-            glm::vec4 deltaPosition = nextPosition - bloonPosition;
-            
-            bloons[i].setTranslation(deltaPosition);
-        }
+        if(!bloons[i].isBlown())
+            return false;
     }
+
+    return true;
 }

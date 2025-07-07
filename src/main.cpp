@@ -70,24 +70,30 @@ int main(int argc, char* argv[]){
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
     FramebufferSizeCallback(window, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // print GPU informations
-    const GLubyte *vendor      = glGetString(GL_VENDOR);
-    const GLubyte *renderer    = glGetString(GL_RENDERER);
-    const GLubyte *glversion   = glGetString(GL_VERSION);
-    const GLubyte *glslversion = glGetString(GL_SHADING_LANGUAGE_VERSION);
+    // // print GPU informations
+    // const GLubyte *vendor      = glGetString(GL_VENDOR);
+    // const GLubyte *renderer    = glGetString(GL_RENDERER);
+    // const GLubyte *glversion   = glGetString(GL_VERSION);
+    // const GLubyte *glslversion = glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-    printf("GPU: %s, %s, OpenGL %s, GLSL %s\n", vendor, renderer, glversion, glslversion);
+    // printf("GPU: %s, %s, OpenGL %s, GLSL %s\n", vendor, renderer, glversion, glslversion);
 
     // load shaders
     LoadShadersFromFiles();
 
     // load textures
-    LoadTextureImage("../../data/textures/map.png");
-    LoadTextureImage("../../data/textures/red.png");
-    LoadTextureImage("../../data/textures/monkey.png");
-    LoadTextureImage("../../data/textures/metal.jpg");
+    LoadTextureImage("../../data/textures/map.png"); // 0
+    LoadTextureImage("../../data/textures/red.png"); // 1
+    LoadTextureImage("../../data/textures/blue.png"); // 2
+    LoadTextureImage("../../data/textures/green.png"); // 3
+    LoadTextureImage("../../data/textures/yellow.png"); // 4
+    LoadTextureImage("../../data/textures/brown.png"); // 5
+    LoadTextureImage("../../data/textures/monkey.png"); // 6
+    LoadTextureImage("../../data/textures/metal.png"); // 7
+    LoadTextureImage("../../data/textures/wall_front.png"); // 8
+    LoadTextureImage("../../data/textures/wall_right.png"); // 9
 
-    // create object models
+    // load object models
     ObjectModel planeModel("../../data/models/plane.obj");
     planeModel.ComputeNormals();
     planeModel.BuildTrianglesAndAddToVirtualScene();
@@ -127,29 +133,30 @@ int main(int argc, char* argv[]){
     // previous right mouse button state
     bool previousRightMouseButtonPressed = false;
 
-    // start timer
-    float current_time = (float)glfwGetTime();
-    float previous_time_camera = current_time;
-    float previous_time_bloon = current_time;
-    float previous_time_dart = current_time;
+    // start timers
+    float currentTime = (float)glfwGetTime();
 
-    float delta_time_camera;
-    float delta_time_bloon;
-    float delta_time_dart;
+    float previousTimeCamera = currentTime;
+    float previousTimeBloon = currentTime;
+    float previousTimeDart = currentTime;
+    float previousTimeMonkey = currentTime;
 
-    // aux var
-    int b_idx, m_idx;
+    float deltaTimeCamera;
+    float deltaTimeBloon;
+    float deltaTimeDart;
+    float deltaTimeMonkey;
 
     // reset camera
     camera.reset(g_CameraTheta, g_CameraPhi, g_CameraDistance);
 
-    // setup first level
-    setupRound(1);
+    // setup first round
+    int round = 1;
+    setupRound(round);
 
     // render window
     while(!glfwWindowShouldClose(window)){
         // define background color
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0.77f, 0.98f, 1.0f, 1.0f);
 
         // paint framebuffer pixels and reset Z-buffer pixels
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -161,32 +168,34 @@ int main(int argc, char* argv[]){
         camera.update(g_CameraTheta, g_CameraPhi, g_CameraDistance);
 
         // update time
-        current_time = (float)glfwGetTime();
-        delta_time_camera = current_time - previous_time_camera;
-        previous_time_camera = current_time;
+        currentTime = (float)glfwGetTime();
+
+        // update camera time
+        deltaTimeCamera = currentTime - previousTimeCamera;
+        previousTimeCamera = currentTime;
 
         // check camera control keys
         if(W_pressed)
-            camera.move('F', delta_time_camera, monkeys); // front
+            camera.move('F', deltaTimeCamera, monkeys); // front
 
         if(A_pressed)
-            camera.move('L', delta_time_camera, monkeys); // left
+            camera.move('L', deltaTimeCamera, monkeys); // left
 
         if(S_pressed)
-            camera.move('B', delta_time_camera, monkeys); // back
+            camera.move('B', deltaTimeCamera, monkeys); // back
 
         if(D_pressed)
-            camera.move('R', delta_time_camera, monkeys); // right
+            camera.move('R', deltaTimeCamera, monkeys); // right
 
         if(SPACE_pressed)
-            camera.move('U', delta_time_camera, monkeys); // up
+            camera.move('U', deltaTimeCamera, monkeys); // up
 
         if(SHIFT_pressed)
-            camera.move('D', delta_time_camera, monkeys); // down
+            camera.move('D', deltaTimeCamera, monkeys); // down
 
-        if(B_pressed){
-            bloons[0].resetTime();
-        }
+        // if(B_pressed){
+        //     bloons[0].resetTime();
+        // }
 
         // compute view matrix
         glm::mat4 view = Matrix_Camera_View(camera.getPosition(), camera.getViewVector(), camera.getUpVector());
@@ -218,7 +227,7 @@ int main(int argc, char* argv[]){
         // create model matrix
         glm::mat4 model = Matrix_Identity();
 
-        // draw plane
+        // draw ground
         model = Matrix_Scale(10.0f, 1.0f, 6.44f);
 
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
@@ -227,14 +236,66 @@ int main(int argc, char* argv[]){
 
         DrawVirtualObject("plane");
 
-        // get delta_time
-        delta_time_bloon = current_time - previous_time_bloon;
-        previous_time_bloon = current_time;
+        // draw walls
+        model = Matrix_Translate(0.0f, 6.42f, -6.44f) *
+                Matrix_Rotate_X(3.141592 / 2.0f) *
+                Matrix_Scale(10.0f, 1.0f, 6.42f);
 
-        updateBloons(delta_time_bloon);
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, WALL_FRONT);
+        glUniform1i(g_shading_uniform, PHONG);
 
-        // draw bloons
+        DrawVirtualObject("plane");
+
+        model = Matrix_Translate(0.0f, 6.42f, 6.44f) *
+                Matrix_Rotate_Z(3.141592) *
+                Matrix_Rotate_X(-3.141592 / 2.0f) *
+                Matrix_Scale(10.0f, 1.0f, 6.42f);
+
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, WALL_BACK);
+        glUniform1i(g_shading_uniform, PHONG);
+
+        DrawVirtualObject("plane");
+
+        model = Matrix_Translate(10.0f, 6.44f, 0.0f) *
+                Matrix_Rotate_Z(3.141592 / 2.0f) *
+                Matrix_Scale(6.44f, 1.0f, 6.44f);
+
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, WALL_RIGHT);
+        glUniform1i(g_shading_uniform, PHONG);
+
+        DrawVirtualObject("plane");
+
+        model = Matrix_Translate(-10.0f, 6.44f, 0.0f) *
+                Matrix_Rotate_X(3.141592) *
+                Matrix_Rotate_Z(-3.141592 / 2.0f) *
+                Matrix_Scale(6.44f, 1.0f, 6.44f);
+
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, WALL_LEFT);
+        glUniform1i(g_shading_uniform, PHONG);
+
+        DrawVirtualObject("plane");
+
+        // update bloons time
+        deltaTimeBloon = currentTime - previousTimeBloon;
+        previousTimeBloon = currentTime;
+
+        // updateBloons(deltaTimeBloon);
+
+        // for each bloon...
         for(int i=0; i<int(bloons.size()); i++){
+            // update
+            bloons[i].updateTranslation(deltaTimeBloon);
+
+            if(bloons[i].reachedEnd()){
+                player.discountLife(1);
+                bloons[i].blow();
+            }
+
+            // draw
             if(bloons[i].isBlown() || !bloons[i].isReady())
                 continue;
                 
@@ -244,27 +305,24 @@ int main(int argc, char* argv[]){
             glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
             glUniform1i(g_object_id_uniform, bloons[i].getModelId());
             glUniform1i(g_shading_uniform, PHONG);
+            glUniform1i(g_bloon_level, bloons[i].getLevel());
 
             DrawVirtualObject(bloons[i].getModelName());
         }
 
-        // iter for monkeys
+        // update monkeys time
+        deltaTimeMonkey = currentTime - previousTimeMonkey;
+        previousTimeMonkey = currentTime;
+
+        // for each monkey...
         for(int i=0; i<int(monkeys.size()); i++){
-            glm::vec3 translation = monkeys[i].getTranslation();
-            float rotation = monkeys[i].getRotation();
+            // update
+            monkeys[i].updateCooldown(deltaTimeMonkey);
 
-            model = Matrix_Translate(translation.x, translation.y, translation.z)
-                * Matrix_Rotate_Y(rotation);
-
-            glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-            glUniform1i(g_object_id_uniform, monkeys[i].getModelId());
-
-            if(monkeys[i].getLevel() == 1)
-                glUniform1i(g_shading_uniform, GOURAUD);
-            else
-                glUniform1i(g_shading_uniform, PHONG);
-
-            DrawVirtualObject(monkeys[i].getModelName());
+            if(monkeys[i].getCooldown() >= 3.0f){
+                monkeys[i].setReady();
+                monkeys[i].resetCooldown();
+            }
 
             for(int j = 0; j < int(bloons.size()); j++){
                 if(bloons[j].isBlown())
@@ -280,35 +338,40 @@ int main(int argc, char* argv[]){
 
                     break;
                 }
-            }            
-        }
+            }   
 
-        // get delta_time
-        delta_time_dart = current_time - previous_time_dart;
-        previous_time_dart = current_time;
+            // draw
+            glm::vec3 translation = monkeys[i].getTranslation();
+            float rotation = monkeys[i].getRotation();
 
-        // iter for darts
-        for(int i = 0; i < int(darts.size()); i++){            
-            if(darts[i].isAlive()){
+            model = Matrix_Translate(translation.x, translation.y, translation.z)
+                * Matrix_Rotate_Y(rotation);
 
-                glm::vec4 translation = darts[i].getPosition();
+            glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+            glUniform1i(g_object_id_uniform, monkeys[i].getModelId());
 
-                darts[i].setRotation();
-                float rotation = darts[i].getRotation();
-
-                model = Matrix_Translate(translation.x, translation.y, translation.z)
-                    * Matrix_Rotate_Y(rotation);
-
-                glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-                glUniform1i(g_object_id_uniform, 2);
+            if(monkeys[i].getLevel() == 1)
+                glUniform1i(g_shading_uniform, GOURAUD);
+            else
                 glUniform1i(g_shading_uniform, PHONG);
 
-                DrawVirtualObject("dart");
+            DrawVirtualObject(monkeys[i].getModelName());         
+        }
 
-                darts[i].updateDeltaPos(delta_time_dart);
+        // update darts time
+        deltaTimeDart = currentTime - previousTimeDart;
+        previousTimeDart = currentTime;
 
-                m_idx = darts[i].getMonkeyId();
-                b_idx = darts[i].getBloonTargetId();
+        // for each dart...
+        for(int i = 0; i < int(darts.size()); i++){            
+            if(darts[i].isAlive()){
+                // update
+                darts[i].setRotation();
+
+                darts[i].updateDeltaPosition(deltaTimeDart);
+
+                int b_idx = darts[i].getBloonTargetId();
+                int m_idx = darts[i].getMonkeyId();
 
                 glm::vec4 vec_t = bloons[b_idx].getTranslation();
                 glm::mat4 mat_t = Matrix_Identity() * Matrix_Translate(vec_t.x, vec_t.y, vec_t.z);
@@ -316,23 +379,37 @@ int main(int argc, char* argv[]){
                 glm::vec4 bbox_t_max = mat_t * bloons[b_idx].getMaxBbox();
                 glm::vec4 bbox_t_min = mat_t * bloons[b_idx].getMinBbox();
 
-                if(is_ray_hit_bbox(bbox_t_min, bbox_t_max, darts[i].getPosition(), darts[i].getDeltaPos())){
-                    bloons[b_idx].blow();
+                if(is_ray_hit_bbox(bbox_t_min, bbox_t_max, darts[i].getPosition(), darts[i].getDeltaPosition())){
+                    bloons[b_idx].loseLevel(monkeys[m_idx].getLevel());
                     darts[i].setNotAlive();
-                    monkeys[m_idx].setReady();
 
-                }else{ 
-
+                    if(bloons[b_idx].isBlown())
+                        player.giveMoney(5);
+                }
+                else{ 
                     darts[i].updatePosition();
 
                     if(!is_point_in_range(darts[i].getPosition(), darts[i].getInitialPosition(), darts[i].getRange())){
                         darts[i].setNotAlive();
-                        monkeys[m_idx].setReady();
                     }
                 }
+
+                // draw
+                glm::vec4 translation = darts[i].getPosition();
+                float rotation = darts[i].getRotation();
+
+                model = Matrix_Translate(translation.x, translation.y, translation.z)
+                    * Matrix_Rotate_Y(rotation);
+
+                glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+                glUniform1i(g_object_id_uniform, darts[i].getModelId());
+                glUniform1i(g_shading_uniform, PHONG);
+
+                DrawVirtualObject(darts[i].getModelName());
             }
         }
 
+        // place monkeys
         if((!previousRightMouseButtonPressed && g_RightMouseButtonPressed) && player.inStrategyMode() && player.canBuy(50)){
 
             float translation_x = ((g_LastCursorPosX / (SCREEN_WIDTH/2)) - 1) * 10.0;
@@ -341,27 +418,32 @@ int main(int argc, char* argv[]){
             // printf("%f %f\n", translation_x, translation_z);
 
             if(monkeyPositionValid(translation_x, translation_z)){
-                if(placeMonkey(translation_x, translation_z))
+                int aux = placeMonkey(translation_x, translation_z);
+
+                if(aux == -1)
                     player.discountMoney(50);
+                else if(player.canBuy(100)){
+                    monkeys[aux].upgrade();
+                    player.discountMoney(100);
+                }
             }
         }
 
-        for(int i=0; i<int(bloons.size()); i++){
-            if(bloons[i].reachedEnd()){
-                player.discountLife(1);
-                bloons[i].blow();
-            }
+        // update right mouse button control
+        previousRightMouseButtonPressed = g_RightMouseButtonPressed;
+
+        if(roundFinished()){
+            round += 1;
+            setupRound(round);
+            player.giveMoney(100);
         }
 
         if(player.lost()){
             break;
         }
 
-        // update right mouse button control
-        previousRightMouseButtonPressed = g_RightMouseButtonPressed;
-
-        // print projection matrix
-        TextRendering_ShowProjection(window);
+        // // print projection matrix
+        // TextRendering_ShowProjection(window);
 
         // print fps
         TextRendering_ShowFramesPerSecond(window);

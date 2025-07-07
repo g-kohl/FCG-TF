@@ -1,9 +1,9 @@
-fazer:
-- ajustar pontos de controle
-- posicionar macacos
-- apagar balões
+ajustar pontos de posicionamento de macaco
+mais níveis de balões
+desascelerar balões
+fim de jogo
 
-concluído:
-- classe para balão e macaco
-- tornar curva de bezier cúbica
-- adicionar novos pontos de controle
+limpar partes inúteis
+comentar
+arrumar includes
+nomes de funções e variáveis

@@ -10,6 +10,7 @@ GLint g_object_id_uniform;
 GLint g_shading_uniform;
 GLint g_bbox_min_uniform;
 GLint g_bbox_max_uniform;
+GLint g_bloon_level;
 
 ObjectModel::ObjectModel(const char* filename, const char* basepath, bool triangulate){
     printf("Loading objects from file \"%s\"...\n", filename);

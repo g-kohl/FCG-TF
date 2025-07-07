@@ -34,3 +34,6 @@
 # Folders
 bin/
 .vscode/
+
+# ToDo
+src/todo.txt

@@ -7,13 +7,16 @@ class Player{
     public:
         Player(int life=1, int money=200, bool strategyMode=false);
 
+        // life
         void discountLife(int damage);
         bool lost();
 
+        // money
+        bool canBuy(int price);
         void discountMoney(int price);
         void giveMoney(int cash);
-        bool canBuy(int price);
 
+        // strategy mode
         bool inStrategyMode();
         void setStrategyMode(bool status);
 

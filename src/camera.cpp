@@ -1,5 +1,6 @@
 #include "camera.hpp"
 
+// constructor
 Camera::Camera(float theta, float phi, float distance){
     free = false;
 
@@ -16,6 +17,8 @@ Camera::Camera(float theta, float phi, float distance){
     computeVectors();
 }
 
+// free
+
 bool Camera::getMode(){
     return free;
 }
@@ -24,64 +27,58 @@ void Camera::setMode(bool mode){
     free = mode;
 }
 
+// position
+
 glm::vec4 Camera::getPosition(){
     return position;
 }
 
-glm::vec4 Camera::getViewVector(){
-    return viewVector;
-}
-
-glm::vec4 Camera::getUpVector(){
-    return upVector;
-}
-
-void Camera::move(char direction, float delta_time, std::vector<Monkey> monkeys){
+void Camera::move(char direction, float deltaTime, std::vector<Monkey> &monkeys){
     if(!free)
         return;
 
-    glm::vec4 nextPos; 
+    glm::vec4 nextPosition; 
 
     switch(direction) {
         case 'F':
-            nextPos = position + (-wVector * speed * delta_time);
-            if(!checkBboxCollisions(nextPos, monkeys)){
-                if(nextPos.y >= 0.5f)
-                    position = nextPos;
+            nextPosition = position + (-wVector * speed * deltaTime);
+            if(!checkBboxCollisions(nextPosition, monkeys)){
+                if(nextPosition.y >= 0.5f)
+                    position = nextPosition;
             }
 
             break;
         case 'L':
-            nextPos = position + (-uVector * speed * delta_time);
-            if(!checkBboxCollisions(nextPos, monkeys))
-                position = nextPos;
+            nextPosition = position + (-uVector * speed * deltaTime);
+            if(!checkBboxCollisions(nextPosition, monkeys))
+                position = nextPosition;
 
             break;
         case 'B':
-            nextPos = position + (wVector * speed * delta_time);
-            if(!checkBboxCollisions(nextPos, monkeys)){
-                if(nextPos.y >= 0.5f)
-                    position = nextPos;
+            nextPosition = position + (wVector * speed * deltaTime);
+            if(!checkBboxCollisions(nextPosition, monkeys)){
+                if(nextPosition.y >= 0.5f)
+                    position = nextPosition;
             }
 
             break;
         case 'R':
-            nextPos = position + (uVector * speed * delta_time);
-            if(!checkBboxCollisions(nextPos, monkeys))
-                position = nextPos;
+            nextPosition = position + (uVector * speed * deltaTime);
+            if(!checkBboxCollisions(nextPosition, monkeys))
+                position = nextPosition;
 
             break;
         case 'U':
-            nextPos = position + (upVector * speed * delta_time);
-            if(!checkBboxCollisions(nextPos, monkeys))
-                position = nextPos;
+            nextPosition = position + (upVector * speed * deltaTime);
+            if(!checkBboxCollisions(nextPosition, monkeys))
+                position = nextPosition;
 
             break;
         case 'D':
-            nextPos = position + (-upVector * speed * delta_time);
-            if(!checkBboxCollisions(nextPos, monkeys)){
-                if(nextPos.y >= 0.5f)
-                    position = nextPos;
+            nextPosition = position + (-upVector * speed * deltaTime);
+            if(!checkBboxCollisions(nextPosition, monkeys)){
+                if(nextPosition.y >= 0.5f)
+                    position = nextPosition;
             }
 
             break;
@@ -117,6 +114,18 @@ void Camera::reset(float &theta, float &phi, float &distance){
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);
 }
 
+// view vector
+
+glm::vec4 Camera::getViewVector(){
+    return viewVector;
+}
+
+// up vector
+
+glm::vec4 Camera::getUpVector(){
+    return upVector;
+}
+
 void Camera::computeVectors(){
     viewVector = lookat - position;
     wVector = -viewVector;
@@ -125,10 +134,9 @@ void Camera::computeVectors(){
     uVector /= norm(uVector);
 }
 
-bool Camera::checkBboxCollisions(glm::vec4 nextPos, std::vector<Monkey> monkeys){
-
+bool Camera::checkBboxCollisions(glm::vec4 nextPosition, std::vector<Monkey> &monkeys){
     for(int j = 0; j < int(monkeys.size()); j++){        
-        if(is_sphere_hit_bbox(monkeys[j].getMinBbox(), monkeys[j].getMaxBbox(), nextPos, 0.1f))
+        if(is_sphere_hit_bbox(monkeys[j].getMinBbox(), monkeys[j].getMaxBbox(), nextPosition, 0.1f))
             return true;
     }
 

@@ -16,16 +16,21 @@ class Camera{
     public:
         Camera(float theta, float phi, float distance);
 
+        // free
         bool getMode();
         void setMode(bool mode);
 
+        // position
         glm::vec4 getPosition();
-        glm::vec4 getViewVector();
-        glm::vec4 getUpVector();
-
-        void move(char direction, float deltaTime, std::vector<Monkey> monkeys);
+        void move(char direction, float deltaTime, std::vector<Monkey> &monkeys);
         void update(float theta, float phi, float distance);
         void reset(float &theta, float &phi, float &distance);
+
+        // view vector
+        glm::vec4 getViewVector();
+
+        // up vector
+        glm::vec4 getUpVector();
         
     private:
         bool free;
@@ -33,5 +38,5 @@ class Camera{
         glm::vec4 position, lookat, viewVector, upVector, wVector, uVector;
 
         void computeVectors();
-        bool checkBboxCollisions(glm::vec4 nextPos, std::vector<Monkey> monkeys);
+        bool checkBboxCollisions(glm::vec4 nextPosition, std::vector<Monkey> &monkeys);
 };

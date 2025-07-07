@@ -21,12 +21,19 @@ void LoadShadersFromFiles(){
     g_shading_uniform = glGetUniformLocation(g_GpuProgramID, "shading_model");
     g_bbox_min_uniform = glGetUniformLocation(g_GpuProgramID, "bbox_min");
     g_bbox_max_uniform = glGetUniformLocation(g_GpuProgramID, "bbox_max");
+    g_bloon_level = glGetUniformLocation(g_GpuProgramID, "bloon_level");
 
     glUseProgram(g_GpuProgramID);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_0"), 0);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_1"), 1);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_2"), 2);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_3"), 3);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_4"), 4);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_5"), 5);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_6"), 6);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_7"), 7);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_8"), 8);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "texture_image_9"), 9);
     glUseProgram(0);
 }
 
