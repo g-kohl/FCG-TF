@@ -12,7 +12,7 @@
 #include "scene_object.hpp"
 
 // Constants
-#define MAX_MAP_HEIGHT 6.5
+#define MAX_MAP_HEIGHT 6.0
 #define INITIAL_POSITION glm::vec4(-8.0f, 1.0f, -2.0f, 0.0f)
 #define MAX_LEVEL 4
 #define BLOON_MODEL_ID 1

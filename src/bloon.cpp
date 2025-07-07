@@ -75,7 +75,6 @@ std::vector<glm::vec4> points = {
     glm::vec4(-1.2f, 0.0f, 6.5f, 1.0f),
 };
 
-
 // constructor
 Bloon::Bloon(glm::vec4 translation, std::string modelName, int modelId, int level, float time)
     : translation(translation), modelName(modelName), modelId(modelId), level(level), time(time), ready(false), blown(false) {
@@ -85,9 +84,8 @@ Bloon::Bloon(glm::vec4 translation, std::string modelName, int modelId, int leve
         bbox_min = glm::vec4(object.bbox_min.x, object.bbox_min.y, object.bbox_min.z, 1.0f);
     }
 
-bool Bloon::reachedEnd(){
-    return translation.z > 6.5;
-}
+
+// translation
 
 glm::vec4 Bloon::getTranslation(){
     return translation;

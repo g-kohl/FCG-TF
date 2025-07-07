@@ -12,7 +12,7 @@
 
 // Constants
 #define DART_MODEL_ID 2
-#define VELOCITY 4.0f
+#define VELOCITY 5.0f
 
 class Dart{
     public:

@@ -287,6 +287,9 @@ int main(int argc, char* argv[]){
 
         // for each bloon...
         for(int i=0; i<int(bloons.size()); i++){
+            if(bloons[i].isBlown())
+                continue;
+
             // update
             bloons[i].updateTranslation(deltaTimeBloon);
 
@@ -296,9 +299,9 @@ int main(int argc, char* argv[]){
             }
 
             // draw
-            if(bloons[i].isBlown() || !bloons[i].isReady())
+            if(!bloons[i].isReady())
                 continue;
-                
+
             glm::vec3 translation = bloons[i].getTranslation();
             model = Matrix_Translate(translation.x, translation.y, translation.z);
 
@@ -418,12 +421,12 @@ int main(int argc, char* argv[]){
             // printf("%f %f\n", translation_x, translation_z);
 
             if(monkeyPositionValid(translation_x, translation_z)){
-                int aux = placeMonkey(translation_x, translation_z);
+                int idx = placeMonkey(translation_x, translation_z);
 
-                if(aux == -1)
+                if(idx == -1)
                     player.discountMoney(50);
                 else if(player.canBuy(100)){
-                    monkeys[aux].upgrade();
+                    monkeys[idx].upgrade();
                     player.discountMoney(100);
                 }
             }
@@ -447,6 +450,9 @@ int main(int argc, char* argv[]){
 
         // print fps
         TextRendering_ShowFramesPerSecond(window);
+
+        // print info
+        PrintInfo(window, player.getLife(), player.getMoney());
 
         // swap buffers
         glfwSwapBuffers(window);

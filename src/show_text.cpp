@@ -91,3 +91,25 @@ void TextRendering_ShowFramesPerSecond(GLFWwindow* window){
 
     TextRendering_PrintString(window, buffer, 1.0f-(numchars + 1)*charwidth, 1.0f-lineheight, 1.0f);
 }
+
+void PrintInfo(GLFWwindow* window, int life, int money){ // Chat GPT
+    if (!g_ShowInfoText)
+        return;
+
+    static char lifeBuffer[32];
+    static char moneyBuffer[32];
+    int lifeChars  = snprintf(lifeBuffer, sizeof(lifeBuffer), "Life: %d", life);
+    int moneyChars = snprintf(moneyBuffer, sizeof(moneyBuffer), "Money: %d", money);
+
+    float lineheight = TextRendering_LineHeight(window);
+    float charwidth  = TextRendering_CharWidth(window);
+
+    float y_life  = 1.0f - 2 * lineheight;
+    float y_money = 1.0f - 3 * lineheight;
+
+    TextRendering_PrintString(window, lifeBuffer,
+        1.0f - (lifeChars + 1) * charwidth, y_life, 1.0f);
+
+    TextRendering_PrintString(window, moneyBuffer,
+        1.0f - (moneyChars + 1) * charwidth, y_money, 1.0f);
+}

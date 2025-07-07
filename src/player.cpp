@@ -8,6 +8,10 @@ Player::Player(int life, int money, bool strategyMode)
 
 // life
 
+int Player::getLife(){
+    return life;
+}
+
 void Player::discountLife(int damage){
     life -= damage;
 }
@@ -17,6 +21,10 @@ bool Player::lost(){
 }
 
 // money
+
+int Player::getMoney(){
+    return money;
+}
 
 bool Player::canBuy(int price){
     return money >= price;
