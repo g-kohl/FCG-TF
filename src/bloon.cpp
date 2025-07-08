@@ -107,6 +107,7 @@ void Bloon::updateTranslation(float deltaTime){
         setReady();
 
     if(isReady()){
+        // get next bloon position based on the bezier curve that describes it's movement
         glm::vec4 nextPosition = bezierSpline(points, getTime());
         glm::vec4 translationVector = getTranslation();
         glm::vec4 bloonPosition = glm::vec4(translationVector.x, translationVector.y, translationVector.z, 0.0f);
@@ -186,6 +187,8 @@ void Bloon::blow(){
 }
 
 void setupRound(int round){
+    // creates a list of bloons for each round
+    // the round X has 5*X bloons. every five bloons, their levels increase, stopping at the level four
     bloons.clear();
     glm::vec4 translationVector = INITIAL_POSITION;
 

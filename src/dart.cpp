@@ -73,7 +73,8 @@ float Dart::getRotation(){
     return rotation;
 }
 
-void Dart::setRotation(){ // chat GPT
+////////////////////////// FONTE: Chat-GPT
+void Dart::setRotation(){
     glm::vec4 direction = bloonTargetPosition - initialPosition;
     direction.y = 0.0f;
     direction /= norm(direction);
@@ -85,6 +86,7 @@ void Dart::setRotation(){ // chat GPT
 
     rotation = atan2(direction.x, direction.z) + 3.141592;
 }
+//////////////////////////
 
 // alive
 

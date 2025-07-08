@@ -70,14 +70,6 @@ int main(int argc, char* argv[]){
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
     FramebufferSizeCallback(window, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // // print GPU informations
-    // const GLubyte *vendor      = glGetString(GL_VENDOR);
-    // const GLubyte *renderer    = glGetString(GL_RENDERER);
-    // const GLubyte *glversion   = glGetString(GL_VERSION);
-    // const GLubyte *glslversion = glGetString(GL_SHADING_LANGUAGE_VERSION);
-
-    // printf("GPU: %s, %s, OpenGL %s, GLSL %s\n", vendor, renderer, glversion, glslversion);
-
     // load shaders
     LoadShadersFromFiles();
 
@@ -167,6 +159,9 @@ int main(int argc, char* argv[]){
         // update camera
         camera.update(g_CameraTheta, g_CameraPhi, g_CameraDistance);
 
+        if(!camera.isReset(g_CameraTheta, g_CameraPhi, g_CameraDistance))
+            player.setStrategyMode(false);
+
         // update time
         currentTime = (float)glfwGetTime();
 
@@ -192,10 +187,6 @@ int main(int argc, char* argv[]){
 
         if(SHIFT_pressed)
             camera.move('D', deltaTimeCamera, monkeys); // down
-
-        // if(B_pressed){
-        //     bloons[0].resetTime();
-        // }
 
         // compute view matrix
         glm::mat4 view = Matrix_Camera_View(camera.getPosition(), camera.getViewVector(), camera.getUpVector());
@@ -414,11 +405,11 @@ int main(int argc, char* argv[]){
 
         // place monkeys
         if((!previousRightMouseButtonPressed && g_RightMouseButtonPressed) && player.inStrategyMode() && player.canBuy(50)){
+            int width, height;
+            glfwGetFramebufferSize(window, &width, &height);
 
-            float translation_x = ((g_LastCursorPosX / (SCREEN_WIDTH/2)) - 1) * 10.0;
-            float translation_z = ((g_LastCursorPosY / (SCREEN_HEIGHT/2)) - 1) * 6.44;
-
-            // printf("%f %f\n", translation_x, translation_z);
+            float translation_x = ((g_LastCursorPosX / (width/2)) - 1) * 10.0;
+            float translation_z = ((g_LastCursorPosY / (height/2)) - 1) * 6.44;
 
             if(monkeyPositionValid(translation_x, translation_z)){
                 int idx = placeMonkey(translation_x, translation_z);
@@ -444,9 +435,6 @@ int main(int argc, char* argv[]){
         if(player.lost()){
             break;
         }
-
-        // // print projection matrix
-        // TextRendering_ShowProjection(window);
 
         // print fps
         TextRendering_ShowFramesPerSecond(window);

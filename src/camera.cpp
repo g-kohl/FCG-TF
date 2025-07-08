@@ -34,6 +34,7 @@ glm::vec4 Camera::getPosition(){
 }
 
 void Camera::move(char direction, float deltaTime, std::vector<Monkey> &monkeys){
+    // move the camera and check for collisions with the ground and monkeys
     if(!free)
         return;
 
@@ -114,6 +115,10 @@ void Camera::reset(float &theta, float &phi, float &distance){
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);
 }
 
+bool Camera::isReset(float &theta, float &phi, float &distance){
+    return (theta == 0.0f) && (phi == 3.141592f / 2.0f) && (distance == 11.0f) && !free && (lookat == glm::vec4(0.0f,0.0f,0.0f,1.0f));
+}
+
 // view vector
 
 glm::vec4 Camera::getViewVector(){
@@ -135,6 +140,7 @@ void Camera::computeVectors(){
 }
 
 bool Camera::checkBboxCollisions(glm::vec4 nextPosition, std::vector<Monkey> &monkeys){
+    // check collision with each monkey
     for(int j = 0; j < int(monkeys.size()); j++){        
         if(is_sphere_hit_bbox(monkeys[j].getMinBbox(), monkeys[j].getMaxBbox(), nextPosition, 0.1f))
             return true;

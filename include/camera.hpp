@@ -25,6 +25,7 @@ class Camera{
         void move(char direction, float deltaTime, std::vector<Monkey> &monkeys);
         void update(float theta, float phi, float distance);
         void reset(float &theta, float &phi, float &distance);
+        bool isReset(float &theta, float &phi, float &distance);
 
         // view vector
         glm::vec4 getViewVector();

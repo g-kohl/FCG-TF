@@ -42,6 +42,7 @@ float Monkey::getRotation(){
     return rotation;
 }
 
+////////////////////////// FONTE: Chat-GPT
 void Monkey::lookToBloon(glm::vec4 position){ // chat GPT
     glm::vec4 lookDirection = position - translation;
     lookDirection.y = 0.0f;
@@ -54,6 +55,7 @@ void Monkey::lookToBloon(glm::vec4 position){ // chat GPT
 
     rotation = atan2(lookDirection.x, lookDirection.z) + 3.141592; 
 }
+//////////////////////////
 
 // range
 
@@ -114,6 +116,7 @@ void Monkey::setNotReady(){
 }
 
 bool monkeyPositionValid(float t_x, float t_z){
+    // check if the position is in the bloons' path
     if(t_x >= -10.5 && t_x <= 1.0 && t_z >= -2.0 && t_z <= -0.5)
         return false;
 

@@ -1,7 +1,6 @@
 #include "animation_functions.hpp"
 
 glm::vec4 bezierSpline(std::vector<glm::vec4> &points, float delta_time){
-
     int seg;
     glm:: vec4 p1, p2, p3, p4;
     float t;

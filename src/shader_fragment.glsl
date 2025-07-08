@@ -51,6 +51,34 @@ uniform sampler2D texture_image_9;
 // color
 out vec4 color;
 
+// constants
+#define M_PI   3.14159265358979323846
+#define M_PI_2 1.57079632679489661923
+
+
+vec2 planar_projection(){
+    float U = (position_model.x - bbox_min.x)/(bbox_max.x - bbox_min.x);
+    float V = (position_model.y - bbox_min.y)/(bbox_max.y - bbox_min.y);
+
+    return vec2(U, V);
+}
+
+
+vec2 spheric_projection(){
+    vec4 bbox_center = (bbox_min + bbox_max) / 2.0;
+    vec4 p_point = bbox_center + (position_model - bbox_center)/(length(position_model - bbox_center));
+    vec4 p_vector = p_point - bbox_center;
+
+    float theta = atan(p_vector.x, p_vector.z);
+    float phi = asin(p_vector.y);
+
+    float U = (theta + M_PI)/(2*M_PI);
+    float V = (phi + M_PI_2)/M_PI;
+
+    return vec2(U, V);
+}
+
+
 void main(){
     if(shading_model == PHONG){
         vec4 origin = vec4(0.0, 0.0, 0.0, 1.0);
@@ -80,72 +108,33 @@ void main(){
             q = 1.0;
         }
         else if(object_id == BLOON){
-            U = texture_coordinates.x;
-            V = texture_coordinates.y;
-
             if(bloon_level == 1)
-                Kd = texture(texture_image_1, vec2(U,V)).rgb;
+                Kd = texture(texture_image_1, planar_projection()).rgb;
             if(bloon_level == 2)
-                Kd = texture(texture_image_2, vec2(U,V)).rgb;
+                Kd = texture(texture_image_2, planar_projection()).rgb;
             if(bloon_level == 3)
-                Kd = texture(texture_image_3, vec2(U,V)).rgb;
+                Kd = texture(texture_image_3, planar_projection()).rgb;
             if(bloon_level == 4)
-                Kd = texture(texture_image_4, vec2(U,V)).rgb;
+                Kd = texture(texture_image_4, planar_projection()).rgb;
 
             Ks = vec3(0.8,0.8,0.8);
             Ka = vec3(0.0,0.0,0.0);
             q = 50.0;
         }
         else if(object_id == DART){
-            float minx = bbox_min.x;
-            float maxx = bbox_max.x;
-
-            float miny = bbox_min.y;
-            float maxy = bbox_max.y;
-
-            float minz = bbox_min.z;
-            float maxz = bbox_max.z;
-
-            U = (position_model.x - minx)/(maxx - minx);
-            V = (position_model.y - miny)/(maxy - miny);
-
-            Kd = texture(texture_image_7, vec2(U,V)).rgb;
+            Kd = texture(texture_image_7, planar_projection()).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;
         }
         else if(object_id == MONKEY_LEVEL_1){
-            float minx = bbox_min.x;
-            float maxx = bbox_max.x;
-
-            float miny = bbox_min.y;
-            float maxy = bbox_max.y;
-
-            float minz = bbox_min.z;
-            float maxz = bbox_max.z;
-
-            U = (position_model.x - minx)/(maxx - minx);
-            V = (position_model.y - miny)/(maxy - miny);
-
-            Kd = texture(texture_image_5, vec2(U,V)).rgb;
+            Kd = texture(texture_image_5, planar_projection()).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;
         }
         else if(object_id == MONKEY_LEVEL_2){
-            float minx = bbox_min.x;
-            float maxx = bbox_max.x;
-
-            float miny = bbox_min.y;
-            float maxy = bbox_max.y;
-
-            float minz = bbox_min.z;
-            float maxz = bbox_max.z;
-
-            U = (position_model.x - minx)/(maxx - minx);
-            V = (position_model.y - miny)/(maxy - miny);
-
-            Kd = texture(texture_image_6, vec2(U,V)).rgb;
+            Kd = texture(texture_image_6, spheric_projection()).rgb;
             Ks = vec3(0.0,0.0,0.0);
             Ka = vec3(0.0,0.0,0.0);
             q = 1.0;

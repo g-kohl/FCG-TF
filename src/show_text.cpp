@@ -92,6 +92,7 @@ void TextRendering_ShowFramesPerSecond(GLFWwindow* window){
     TextRendering_PrintString(window, buffer, 1.0f-(numchars + 1)*charwidth, 1.0f-lineheight, 1.0f);
 }
 
+////////////////////////// FONTE: Chat-GPT
 void PrintInfo(GLFWwindow* window, int life, int money){ // Chat GPT
     if (!g_ShowInfoText)
         return;
@@ -113,3 +114,4 @@ void PrintInfo(GLFWwindow* window, int life, int money){ // Chat GPT
     TextRendering_PrintString(window, moneyBuffer,
         1.0f - (moneyChars + 1) * charwidth, y_money, 1.0f);
 }
+//////////////////////////

@@ -5,7 +5,7 @@
 
 class Player{
     public:
-        Player(int life=1, int money=200, bool strategyMode=false);
+        Player(int life=5, int money=200, bool strategyMode=false);
 
         // life
         int getLife();
