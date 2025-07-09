@@ -46,25 +46,24 @@ São realizados quatro tipos de teste de intersecção/colisão:
 
 ### Atalhos
 
-`C` modo de câmera estratégica (visão superior)
-`F` troca o modo de câmera, entre fixa (look-at) e livre (free camera)
-`Botão direito do mouse` posiciona um macaco em uma posição livre do cenário ou evolui um macaco ao clicá-lo
-`Botão esquerdo do mouse` controle de câmera
+`C` modo de câmera estratégica (visão superior)  
+`F` troca o modo de câmera, entre fixa (look-at) e livre (free camera)  
+`Botão direito do mouse` posiciona um macaco em uma posição livre do cenário ou evolui um macaco ao clicá-lo  
+`Botão esquerdo do mouse` controle de câmera  
 
 #### Controles da câmera
-`W` mover para frente
-`A` mover para a esquerda
-`S` mover para trás
-`D` mover para a direita
-`Espaço` mover para cima
-`Shift` mover para baixo
+`W` mover para frente  
+`A` mover para a esquerda  
+`S` mover para trás  
+`D` mover para a direita  
+`Espaço` mover para cima  
+`Shift` mover para baixo  
 
 ## Compilação e execução
 
 ### Dependências
 
-Necessário a instalação de algumas dependências
-**Linux** (_Ubuntu_):
+Necessário a instalação de algumas dependências, **Linux** (_Ubuntu_):
 ```bash
 sudo apt-get install build-essential make libx11-dev libxrandr-dev \
                      libxinerama-dev libxcursor-dev libxcb1-dev libxext-dev \
