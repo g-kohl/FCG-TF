@@ -73,6 +73,13 @@ No Linux _Mint_, pode ser necessário instalar dependências adicionais:
 ```bash
 sudo apt-get install libmesa-dev libxxf86vm-dev
 ```
+### Compilação
 
-
-
+Clone o repositório do projeto utilizando **Git**:
+```
+git clone https://github.com/g-kohl/FCG-TF.git
+```
+No repositório do projeto execute:
+```bash
+make run
+```
