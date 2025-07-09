@@ -34,10 +34,46 @@ Além de possuírem malhas poligonais complexas, todas as animações dos objeto
 
 Os balões, que se movimentam seguindo uma trilha de pontos que são calculados por curvas de bézier cúbicas piecewise, possuem níveis diferentes que são representados por cores distintas. Sua iluminação é calculada utilizando o modelo de Blinn-Phong.
 Já os demais objetos são iluminados pelo modelo de iluminação difusa.
-É possível se mover pela cena livremente utilizando uma free camera ou fixar a câmera do tipo look-at para uma visão superior do cenário.
+É possível se mover pela cena livremente utilizando uma free camera ou uma câmera do tipo look-at fixa em um ponto específico , também existe uma câmera para uma visão superior do cenário.
 
 São realizados quatro tipos de teste de intersecção/colisão:
 - Ponto x Esfera: utilizado para detecção de um balão no range de visão de um macaco.
 - Bounding Box x Vetor: utilizado na checagem de colisão do dardo com um balão.
 - Esfera x Bounding Box: utilizado na colisão da câmera com os macacos.
-- Bounding Box x Bounding Box: utilizado para evitar a sobreposição de dois macacos ao posicionalos.
+- Bounding Box x Bounding Box: utilizado para evitar a sobreposição de dois macacos ao posicioná-los.
+
+## Manual de utilização da aplicação
+
+### Atalhos
+
+`C` modo de câmera estratégica (visão superior)
+`F` troca o modo de câmera, entre fixa (look-at) e livre (free camera)
+`Botão direito do mouse` posiciona um macaco em uma posição livre do cenário ou evolui um macaco ao clicá-lo
+`Botão esquerdo do mouse` controle de câmera
+
+#### Controles da câmera
+`W` mover para frente
+`A` mover para a esquerda
+`S` mover para trás
+`D` mover para a direita
+`Espaço` mover para cima
+`Shift` mover para baixo
+
+## Compilação e execução
+
+### Dependências
+
+Necessário a instalação de algumas dependências
+**Linux** (_Ubuntu_):
+```bash
+sudo apt-get install build-essential make libx11-dev libxrandr-dev \
+                     libxinerama-dev libxcursor-dev libxcb1-dev libxext-dev \
+                     libxrender-dev libxfixes-dev libxau-dev libxdmcp-dev
+```
+No Linux _Mint_, pode ser necessário instalar dependências adicionais:
+```bash
+sudo apt-get install libmesa-dev libxxf86vm-dev
+```
+
+
+
