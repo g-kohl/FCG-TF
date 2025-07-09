@@ -29,6 +29,7 @@ Guilherme:
 
 A aplicação conta três tipos de objetos instanciaveis: balão, macaco, dardo. Sendo o macaco um objeto que possui dois modelos que dependem de seu nível. Todas as animações dos objetos são baseados em tempo, utilizando cálculo de delta time de cada objeto. 
 Além disso, os balões, que se movimentam seguindo uma trilha de pontos que são calculados por curvas de bézier cúbicas piecewise, possuem níveis diferentes que são representados por cores distintas.
+
 São realizados quatro tipos de teste de intersecção/colisão:
 - Ponto x Esfera: utilizado para detecção de um balão no range de visão de um macaco.
 - Bounding Box x Vetor: utilizado na checagem de colisão do dardo com um balão.
