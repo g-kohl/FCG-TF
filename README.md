@@ -8,7 +8,7 @@ Para isso, foi realizado o desenvolvimento de uma versão em 3D do jogo **Bloons
 ## Contribuições de cada membro
 
 O trabalho foi realizado de forma colaborativa entre os membros, cada membro foi responsável por partes distintas do desenvolvimento, porém a visão geral da aplicação foi necessária para ambos.
-Além disso, o desenvolvimento da lógica central e certas funcionalidades do jogo foi desenvolvido simultaneamente por ambos.
+Além disso, o desenvolvimento da lógica central e certas funcionalidades do jogo foi desenvolvida simultaneamente por ambos.
 
 Matheus:
 - Movimento dos balões utilizando curvas de bézier cúbicas.
@@ -22,3 +22,15 @@ Guilherme:
 - Modelos de Interpolação de Phong e Gouraud.
 - Mapeamento de texturas dos objetos.
 - Lógica do jogo e utilitários
+
+## Uso de LLM
+
+## Uso de conceitos de Computação Gráfica
+
+A aplicação conta três tipos de objetos instanciaveis: balão, macaco, dardo. Sendo o macaco um objeto que possui dois modelos que dependem de seu nível. Todas as animações dos objetos são baseados em tempo, utilizando cálculo de delta time de cada objeto. 
+Além disso, os balões, que se movimentam seguindo uma trilha de pontos que são calculados por curvas de bézier cúbicas piecewise, possuem níveis diferentes que são representados por cores distintas.
+São realizados quatro tipos de teste de intersecção/colisão:
+- Ponto x Esfera: utilizado para detecção de um balão no range de visão de um macaco.
+- Bounding Box x Vetor: utilizado na checagem de colisão do dardo com um balão.
+- Esfera x Bounding Box: utilizado na colisão da câmera com os macacos.
+- Bounding Box x Bounding Box: utilizado para evitar a sobreposição de dois macacos ao posicionalos.
