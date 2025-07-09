@@ -1,6 +1,6 @@
 #include "animation_functions.hpp"
 
-// Function that calculates the next point given the control points of a cubic bezier curve.
+// Function that calculates the next point given the control points of a cubic bezier curve
 // Used for the movement of bloons
 glm::vec4 bezierSpline(std::vector<glm::vec4> &points, float delta_time){
     int seg;
