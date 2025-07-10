@@ -5,6 +5,8 @@ Trabalho desenvolvido na disciplina de Fundamentos de Computação Gráfica (INF
 O objetivo deste trabalho é consolidar o conhecimento sobre os principais conceitos de Computação Gráfica, como visualização em ambientes tridimensionais, interação, detecção de colisão, utilização de texturas, entre outros.
 Para isso, foi realizado o desenvolvimento de uma versão em 3D do jogo **Bloons Tower Defense**, totalmente em C/C++ com OpenGL.
 
+![image](https://github.com/user-attachments/assets/b2a18ce3-3981-41d8-b6ca-5eec0558ffe1)
+
 ## Contribuições de cada membro
 
 O trabalho foi realizado de forma colaborativa entre os membros, cada membro foi responsável por partes distintas do desenvolvimento, porém a visão geral da aplicação foi necessária para ambos.
@@ -46,6 +48,9 @@ São realizados quatro tipos de teste de intersecção/colisão:
 - Bounding Box x Vetor: utilizado na checagem de colisão do dardo com um balão.
 - Esfera x Bounding Box: utilizado na colisão da câmera com os macacos.
 - Bounding Box x Bounding Box: utilizado para evitar a sobreposição de dois macacos ao posicioná-los.
+
+![image](https://github.com/user-attachments/assets/ac9ce789-8681-4545-adac-bcbd938f4f6e)
+
 
 ## Manual de utilização da aplicação
 
