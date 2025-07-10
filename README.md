@@ -25,6 +25,11 @@ Guilherme:
 
 ## Uso de LLM
 
+O uso de LLM's para auxílio de escrita de código foi usado em apenas duas funcionalidades do trabalho.
+Usou-se o Chat-GPT para criar as funções `PrintInfo`, que escreve na tela a vida e o dinheiro do jogador, e `lookToBloon`/`setRotation`, que calculam o ângulo que deve-se girar o macaco/dardo para este ficar apontado para o balão alvo.
+Em ambos os casos, a dupla teria condições de escrever a função por conta própria, o LLM serviu apenas para acelerar a escrita do programa.
+No restante do trabalho, não se viu necessidade do uso dessa ferramenta.
+
 ## Uso de conceitos de Computação Gráfica
 
 A aplicação conta com três tipos de objetos instanciáveis: balão, macaco e dardo. Sendo o macaco um objeto que possui dois modelos e pode ser posicionado pelo usuário utilizando transformações geométricas.
